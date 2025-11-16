@@ -66,7 +66,7 @@
 ### Para Popular a Ouro:
 
 1. **Execute o notebook de ranking**:
-   - Abra: `notebook_ranking_enderecos_ouro.ipynb`
+   - Abra: `notebooks/notebook_ranking_enderecos_ouro.ipynb`
    - Execute todas as células
    - Aguarde o cálculo de scores e rankings
 
@@ -122,8 +122,8 @@ Ouro: ranking por CPF
 
 ## 📚 Arquivos de Referência
 
-- `notebook_normalizacao_enderecos_prata.ipynb` - Normalização
-- `notebook_ranking_enderecos_ouro.ipynb` - Ranking
+- `notebooks/notebook_normalizacao_enderecos_prata.ipynb` - Normalização
+- `notebooks/notebook_ranking_enderecos_ouro.ipynb` - Ranking
 - `normalizar_enderecos_brasileiros.py` - Normalizador
 - `INSTRUCOES_EXECUCAO_PIPELINE.md` - Instruções detalhadas
 - `verificar_dados.py` - Script de verificação

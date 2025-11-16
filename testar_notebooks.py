@@ -90,8 +90,8 @@ if __name__ == "__main__":
         print(f"\n✅ Todos os notebooks estão válidos!")
         print(f"\n📝 Próximos passos:")
         print(f"   1. Abra o Jupyter Lab")
-        print(f"   2. Execute o notebook_normalizacao_enderecos_prata.ipynb")
-        print(f"   3. Execute o notebook_ranking_enderecos_ouro.ipynb")
+        print(f"   2. Execute o notebooks/notebook_normalizacao_enderecos_prata.ipynb")
+        print(f"   3. Execute o notebooks/notebook_ranking_enderecos_ouro.ipynb")
     else:
         print(f"\n❌ Alguns notebooks têm problemas")
         sys.exit(1)

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Jupyter com Delta Lake e Spark (com Java)
+  jupyter-delta:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter-delta
+    container_name: govbr-jupyter-delta
+    ports:
+      - "8889:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=1q2w3e4r
+      - AWS_ENDPOINT_URL=https://ch8ai-minio.l6zv5a.easypanel.host
+    volumes:
+      - ./delta_scripts:/home/jovyan/work
+      - ./notebooks:/home/jovyan/notebooks
+      - ./:/home/jovyan/govbr
+    command: >
+      start-notebook.sh --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.notebook_dir=/home/jovyan/notebooks
+    networks:
+      - govbr-network
+
+networks:
+  govbr-network:
+    driver: bridge

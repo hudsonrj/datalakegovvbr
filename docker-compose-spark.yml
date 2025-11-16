@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  # Interface Web na porta 8080
+  web-ui:
+    image: nginx:alpine
+    container_name: govbr-web-ui
+    ports:
+      - "8080:80"
+    volumes:
+      - ./web-ui:/usr/share/nginx/html:ro
+    networks:
+      - govbr-network
+
+networks:
+  govbr-network:
+    driver: bridge

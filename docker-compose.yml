@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Delta Lake com Spark para leitura de dados como banco relacional
+  delta-lake:
+    image: deltaio/delta:latest
+    container_name: govbr-delta-lake
+    ports:
+      - "8080:8080"  # Spark UI
+      - "4040:4040"  # Spark Application UI
+      - "8888:8888"  # Jupyter (se necessário)
+    environment:
+      - SPARK_MASTER=local[*]
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=1q2w3e4r
+      - AWS_ENDPOINT_URL=https://ch8ai-minio.l6zv5a.easypanel.host
+      - S3_ENDPOINT=ch8ai-minio.l6zv5a.easypanel.host
+      - S3_USE_SSL=true
+      - S3_PATH_STYLE_ACCESS=true
+      - MINIO_BUCKET=govbr
+    volumes:
+      - ./delta_scripts:/opt/spark/work-dir
+      - ./notebooks:/opt/spark/notebooks
+    command: >
+      /bin/bash -c "
+      pip install delta-spark pyspark s3fs boto3 jupyterlab -q &&
+      /opt/spark/bin/spark-submit --packages io.delta:delta-core_2.12:2.4.0,org.apache.hadoop:hadoop-aws:3.3.2 --conf 'spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension' --conf 'spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog' --conf 'spark.hadoop.fs.s3a.endpoint=https://ch8ai-minio.l6zv5a.easypanel.host' --conf 'spark.hadoop.fs.s3a.access.key=admin' --conf 'spark.hadoop.fs.s3a.secret.key=1q2w3e4r' --conf 'spark.hadoop.fs.s3a.path.style.access=true' --conf 'spark.hadoop.fs.s3a.connection.ssl.enabled=true' --conf 'spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem' /opt/spark/work-dir/delta_setup.py
+      "
+    networks:
+      - govbr-network
+
+  # Jupyter Lab com Delta Lake para interface interativa
+  jupyter-delta:
+    image: jupyter/pyspark-notebook:latest
+    container_name: govbr-jupyter-delta
+    ports:
+      - "8889:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=1q2w3e4r
+      - AWS_ENDPOINT_URL=https://ch8ai-minio.l6zv5a.easypanel.host
+    volumes:
+      - ./delta_scripts:/home/jovyan/work
+      - ./notebooks:/home/jovyan/notebooks
+    command: >
+      /bin/bash -c "
+      pip install delta-spark s3fs boto3 -q &&
+      start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''
+      "
+    networks:
+      - govbr-network
+
+networks:
+  govbr-network:
+    driver: bridge

@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Ambiente virtual
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Dados e arquivos temporários
+*.parquet
+*.csv
+*.json
+!package.json
+!package-lock.json
+*.log
+*.tmp
+*.temp
+
+# Configurações sensíveis
+.env
+.env.local
+*.key
+*.pem
+secrets/
+credentials/
+
+# Docker
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Arquivos específicos do projeto
+criar_notebook_analises.py
+verificar_*.py
+test_*.py
+
+# Backups
+*.bak
+*.backup
+*~

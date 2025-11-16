@@ -1,0 +1,3109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GovBR Data Lake - Plataforma Profissional</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #141b2d;
+            --bg-tertiary: #1a2332;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #1e293b;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar-brand h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-brand p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-primary);
+            background: var(--bg-tertiary);
+            border-color: var(--border-color);
+        }
+
+        .nav-link.active {
+            color: var(--accent-primary);
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-radius: 16px;
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(99, 102, 241, 0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            border-color: var(--accent-primary);
+        }
+
+        /* Section */
+        .section {
+            background: var(--bg-secondary);
+            margin-bottom: 3rem;
+            padding: 3rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-primary);
+        }
+
+        .section h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--bg-tertiary);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--accent-primary);
+        }
+
+        .card h4 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.375rem 0.875rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+
+        .badge-bronze {
+            background: linear-gradient(135deg, #cd7f32, #b87333);
+            color: white;
+        }
+
+        .badge-prata {
+            background: linear-gradient(135deg, #c0c0c0, #a8a8a8);
+            color: #1a1a1a;
+        }
+
+        .badge-ouro {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a1a;
+        }
+
+        .badge-success {
+            background: var(--accent-success);
+            color: white;
+        }
+
+        .badge-info {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            color: var(--accent-primary);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--accent-primary);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'CODE';
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .code-block code {
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #a6e3a1;
+            line-height: 1.6;
+        }
+
+        .code-block code .keyword { color: #c678dd; }
+        .code-block code .string { color: #98c379; }
+        .code-block code .number { color: #d19a66; }
+        .code-block code .comment { color: #5c6370; font-style: italic; }
+
+        /* Diagram Container */
+        .diagram-container {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .mermaid {
+            background: transparent !important;
+        }
+
+        /* Flow Steps */
+        .flow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .flow-step {
+            background: var(--bg-tertiary);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-primary);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .flow-step::after {
+            content: '↓';
+            position: absolute;
+            left: 50%;
+            bottom: -2rem;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-step:hover {
+            transform: translateX(8px);
+            border-left-color: var(--accent-secondary);
+        }
+
+        .flow-step h4 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--accent-success);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--accent-warning);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 1rem;
+        }
+
+        li {
+            margin: 0.75rem 0;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        li strong {
+            color: var(--text-primary);
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        /* Highlight */
+        .highlight {
+            background: rgba(99, 102, 241, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-indicator.online {
+            background: var(--accent-success);
+            box-shadow: 0 0 8px var(--accent-success);
+        }
+
+        .status-indicator.offline {
+            background: var(--accent-danger);
+        }
+
+        /* Enhanced Tree Structure */
+        .tree-structure-modern {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tree-structure-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .tree-layer {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .tree-layer:hover {
+            transform: translateX(8px);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .tree-layer.bronze { border-left-color: #cd7f32; }
+        .tree-layer.prata { border-left-color: #c0c0c0; }
+        .tree-layer.ouro { border-left-color: #ffd700; }
+
+        .tree-layer-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tree-layer-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .tree-layer-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .tree-layer-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tree-layer.bronze .tree-layer-badge {
+            background: linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(184, 115, 51, 0.2));
+            color: #cd7f32;
+            border: 1px solid rgba(205, 127, 50, 0.3);
+        }
+
+        .tree-layer.prata .tree-layer-badge {
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.2), rgba(168, 168, 168, 0.2));
+            color: #c0c0c0;
+            border: 1px solid rgba(192, 192, 192, 0.3);
+        }
+
+        .tree-layer.ouro .tree-layer-badge {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 237, 78, 0.2));
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .tree-path-item {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            margin: 0.5rem 0;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
+        }
+
+        .tree-path-item:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: var(--accent-primary);
+            transform: translateX(4px);
+        }
+
+        .tree-path-icon {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .tree-path-name {
+            flex: 1;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .tree-path-meta {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .tree-path-count {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--accent-primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .tree-path-format {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-success);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Enhanced Flow Steps */
+        .flow-execution-modern {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .flow-step-card {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(30, 41, 59, 0.8) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .flow-step-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
+            transition: width 0.3s ease;
+        }
+
+        .flow-step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--accent-primary);
+        }
+
+        .flow-step-card:hover::before {
+            width: 100%;
+            opacity: 0.1;
+        }
+
+        .flow-step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .flow-step-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flow-step-icon {
+            font-size: 1.5rem;
+        }
+
+        .flow-step-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .flow-step-details {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .flow-step-details code {
+            font-family: 'Fira Code', monospace;
+            color: var(--accent-success);
+            font-size: 0.85rem;
+        }
+
+        /* Enhanced Schema Table */
+        .schema-table-modern {
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            margin: 2rem 0;
+        }
+
+        .schema-header {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            padding: 1.5rem 2rem;
+            color: white;
+        }
+
+        .schema-header h4 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .schema-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .schema-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schema-table thead {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .schema-table th {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-primary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--accent-primary);
+        }
+
+        .schema-table td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .schema-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .schema-table tbody tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .schema-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .schema-field-name {
+            font-family: 'Fira Code', monospace;
+            color: var(--accent-success);
+            font-weight: 600;
+        }
+
+        .schema-field-type {
+            font-family: 'Fira Code', monospace;
+            color: #c678dd;
+            background: rgba(198, 120, 221, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .schema-field-desc {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Enhanced Installation Cards */
+        .installation-modern {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .install-step-card {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(30, 41, 59, 0.8) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .install-step-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent);
+            border-radius: 0 0 0 100%;
+        }
+
+        .install-step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--accent-primary);
+        }
+
+        .install-step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .install-step-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .install-step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            flex: 1;
+        }
+
+        .install-step-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .install-code-block {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-top: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            position: relative;
+        }
+
+        .install-code-block::before {
+            content: 'TERMINAL';
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">
+                <div>
+                    <h1>🚀 GovBR Data Lake</h1>
+                    <p>Plataforma Profissional de Dados Governamentais</p>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#visao-geral" class="nav-link active">Visão Geral</a>
+                <a href="#arquitetura" class="nav-link">Arquitetura</a>
+                <a href="#componentes" class="nav-link">Componentes</a>
+                <a href="#ingestao" class="nav-link">Ingestão</a>
+                <a href="#catalogo" class="nav-link">Catálogo</a>
+                <a href="#passo-a-passo" class="nav-link">Guia</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>GovBR Data Lake</h1>
+            <p>Plataforma completa de ingestão, transformação e análise de dados governamentais brasileiros. Arquitetura moderna com MinIO, Delta Lake e Apache Spark.</p>
+            <div class="hero-buttons">
+                <a href="http://49.13.203.251:8889" target="_blank" class="btn btn-primary">📊 Abrir Jupyter Lab</a>
+                <a href="https://ch8ai-minio.l6zv5a.easypanel.host" target="_blank" class="btn btn-secondary">🗄️ Acessar MinIO</a>
+            </div>
+        </div>
+
+        <!-- Visão Geral -->
+        <section id="visao-geral" class="section">
+            <h2>📋 Visão Geral</h2>
+            <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                O <strong class="highlight">GovBR Data Lake</strong> é uma plataforma completa de ingestão, transformação e análise de dados governamentais brasileiros, 
+                estruturada em três camadas seguindo o padrão <strong>Medallion Architecture</strong>.
+            </p>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🥉 Camada Bronze</h4>
+                    <p>Dados brutos coletados diretamente das APIs governamentais, sem transformações. Formato Parquet particionado por data para máxima eficiência.</p>
+                    <div style="margin-top: 1rem;">
+                        <span class="badge badge-bronze">Raw Data</span>
+                        <span class="badge badge-info">Parquet</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h4>🥈 Camada Prata</h4>
+                    <p>Dados tratados, limpos e relacionados. Normalização, remoção de duplicatas e criação de dimensões e fatos estruturados para análise.</p>
+                    <div style="margin-top: 1rem;">
+                        <span class="badge badge-prata">Cleaned</span>
+                        <span class="badge badge-info">Structured</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h4>🥇 Camada Ouro</h4>
+                    <p>Dados enriquecidos com métricas calculadas, classificações, rankings e agregações prontas para consumo em dashboards e análises.</p>
+                    <div style="margin-top: 1rem;">
+                        <span class="badge badge-ouro">Enriched</span>
+                        <span class="badge badge-success">Analytics Ready</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Arquitetura -->
+        <section id="arquitetura" class="section">
+            <h2>🏗️ Arquitetura do Sistema</h2>
+            
+            <h3>Medallion Architecture</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                A arquitetura Medallion é um padrão de design de data lake que organiza dados em camadas progressivamente refinadas, 
+                garantindo qualidade e confiabilidade dos dados em cada etapa.
+            </p>
+
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    subgraph APIS["🌐 Fontes de Dados"]
+        API1["IBGE API<br/>📊 Municípios, Estados<br/>👥 População"]
+        API2["Portal Transparência<br/>💰 BPC por Município<br/>🏛️ Órgãos SIAFI"]
+    end
+
+    subgraph PIPELINE["⚙️ Pipeline de Processamento"]
+        BRONZE_PROC["🥉 01_bronze_ingestion.py<br/>Coleta e Armazena Dados Brutos"]
+        PRATA_PROC["🥈 02_prata_transformacao.py<br/>Trata e Relaciona Dados"]
+        OURO_PROC["🥇 03_ouro_enriquecimento.py<br/>Enriquece com Métricas"]
+    end
+
+    subgraph MINIO_BUCKET["🗄️ MinIO Bucket: govbr<br/>ch8ai-minio.l6zv5a.easypanel.host"]
+        subgraph BRONZE["🥉 bronze/"]
+            B1["ibge/municipios/<br/>dt=YYYYMMDD/data.parquet<br/>~5.570 registros"]
+            B2["ibge/estados/<br/>dt=YYYYMMDD/data.parquet<br/>27 registros"]
+            B3["portal_transparencia/bpc/<br/>dt=YYYYMMDD/data.parquet<br/>Variável"]
+        end
+
+        subgraph PRATA["🥈 prata/"]
+            P1["dim_municipios/<br/>Dimensão Enriquecida"]
+            P2["dim_estados/<br/>Com Agregações BPC"]
+            P3["fato_bpc/<br/>Relacionado com Municípios"]
+        end
+
+        subgraph OURO["🥇 ouro/"]
+            O1["dim_municipios_enriquecida/<br/>Com Classificações"]
+            O2["agregacao_bpc_por_regiao/<br/>Somas, Médias, Medianas"]
+            O3["top_10_municipios/<br/>Rankings Ordenados"]
+        end
+    end
+
+    subgraph PROCESSING["⚡ Processamento"]
+        SPARK["Apache Spark<br/>🔷 Delta Lake<br/>📊 SQL Queries"]
+    end
+
+    subgraph INTERFACE["🖥️ Interfaces"]
+        JUPYTER["📓 Jupyter Lab<br/>Porta 8889<br/>Análise Interativa"]
+        DASHBOARD["🌐 Dashboard Web<br/>Porta 8080<br/>Documentação"]
+    end
+
+    API1 -->|"GET /localidades/*"| BRONZE_PROC
+    API2 -->|"GET /bpc-por-municipio"| BRONZE_PROC
+    
+    BRONZE_PROC -->|"Salva Parquet"| B1
+    BRONZE_PROC -->|"Salva Parquet"| B2
+    BRONZE_PROC -->|"Salva Parquet"| B3
+    
+    B1 -->|"Lê e Transforma"| PRATA_PROC
+    B2 -->|"Lê e Transforma"| PRATA_PROC
+    B3 -->|"Lê e Transforma"| PRATA_PROC
+    
+    PRATA_PROC -->|"Salva Parquet"| P1
+    PRATA_PROC -->|"Salva Parquet"| P2
+    PRATA_PROC -->|"Salva Parquet"| P3
+    
+    P1 -->|"Lê e Enriquece"| OURO_PROC
+    P2 -->|"Lê e Enriquece"| OURO_PROC
+    P3 -->|"Lê e Enriquece"| OURO_PROC
+    
+    OURO_PROC -->|"Salva Parquet"| O1
+    OURO_PROC -->|"Salva Parquet"| O2
+    OURO_PROC -->|"Salva Parquet"| O3
+    
+    O1 -->|"S3A Protocol"| SPARK
+    O2 -->|"S3A Protocol"| SPARK
+    O3 -->|"S3A Protocol"| SPARK
+    
+    SPARK -->|"Análise e Consultas"| JUPYTER
+    SPARK -->|"Visualização"| DASHBOARD
+
+    style APIS fill:#6366f1,stroke:#4f46e5,color:#fff,stroke-width:2px
+    style PIPELINE fill:#f59e0b,stroke:#d97706,color:#fff,stroke-width:2px
+    style MINIO_BUCKET fill:#8b5cf6,stroke:#7c3aed,color:#fff,stroke-width:3px
+    style BRONZE fill:#cd7f32,stroke:#b87333,color:#fff
+    style PRATA fill:#c0c0c0,stroke:#a8a8a8,color:#000
+    style OURO fill:#ffd700,stroke:#ffed4e,color:#000
+    style PROCESSING fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px
+    style INTERFACE fill:#ec4899,stroke:#db2777,color:#fff,stroke-width:2px
+    style BRONZE_PROC fill:#cd7f32,stroke:#b87333,color:#fff
+    style PRATA_PROC fill:#c0c0c0,stroke:#a8a8a8,color:#000
+    style OURO_PROC fill:#ffd700,stroke:#ffed4e,color:#000
+                </div>
+            </div>
+
+            <h3>Fluxo de Dados Completo</h3>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <h4>1. Ingestão (Bronze)</h4>
+                    <p>Coleta dados brutos das APIs governamentais e armazena em formato Parquet particionado por data no MinIO.</p>
+                    <ul>
+                        <li><strong>IBGE:</strong> Municípios, Estados, População</li>
+                        <li><strong>Portal Transparência:</strong> BPC por Município, Órgãos SIAFI</li>
+                        <li><strong>Formato:</strong> Parquet com compressão Snappy</li>
+                        <li><strong>Particionamento:</strong> Por data (dt=YYYYMMDD)</li>
+                    </ul>
+                </div>
+                
+                <div class="flow-step">
+                    <h4>2. Transformação (Prata)</h4>
+                    <p>Trata, limpa e relaciona os dados brutos, criando estruturas dimensionais e fatos para análise.</p>
+                    <ul>
+                        <li><strong>Limpeza:</strong> Remoção de duplicatas, normalização</li>
+                        <li><strong>Relacionamentos:</strong> Joins entre tabelas</li>
+                        <li><strong>Estruturação:</strong> Dimensões e fatos</li>
+                        <li><strong>Métricas Básicas:</strong> Valores per capita, agregações</li>
+                    </ul>
+                </div>
+                
+                <div class="flow-step">
+                    <h4>3. Enriquecimento (Ouro)</h4>
+                    <p>Enriquece os dados com métricas avançadas, classificações, rankings e agregações prontas para consumo.</p>
+                    <ul>
+                        <li><strong>Classificações:</strong> Por população, valor, região</li>
+                        <li><strong>Rankings:</strong> Top 10, ordenações</li>
+                        <li><strong>Agregações:</strong> Por região, estado, período</li>
+                        <li><strong>Indicadores:</strong> Eficiência, tendências</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Componentes -->
+        <section id="componentes" class="section">
+            <h2>🔧 Componentes da Arquitetura</h2>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🗄️ MinIO</h4>
+                    <p><strong>Object Storage S3-Compatible</strong></p>
+                    <p style="margin-top: 1rem;">Armazenamento de objetos compatível com S3 onde são salvos todos os dados nas três camadas em formato Parquet.</p>
+                    <div class="info-box" style="margin-top: 1rem; padding: 1rem;">
+                        <strong>Endpoint:</strong> <code style="color: var(--accent-primary);">ch8ai-minio.l6zv5a.easypanel.host</code><br>
+                        <strong>Bucket:</strong> <code style="color: var(--accent-primary);">govbr</code><br>
+                        <strong>Protocolo:</strong> HTTPS (S3A)
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>⚡ Apache Spark</h4>
+                    <p><strong>Processamento Distribuído</strong></p>
+                    <p style="margin-top: 1rem;">Motor de processamento distribuído para grandes volumes de dados, leitura de Parquet, transformações e consultas SQL.</p>
+                    <div class="info-box" style="margin-top: 1rem; padding: 1rem;">
+                        <strong>Configuração:</strong> S3A filesystem<br>
+                        <strong>Extensões:</strong> Delta Lake<br>
+                        <strong>Modo:</strong> Local[*]
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🔷 Delta Lake</h4>
+                    <p><strong>Transações ACID</strong></p>
+                    <p style="margin-top: 1rem;">Camada de transações ACID sobre dados Parquet, versionamento, time travel e schema evolution.</p>
+                    <div class="info-box" style="margin-top: 1rem; padding: 1rem;">
+                        <strong>Features:</strong> ACID, Versionamento<br>
+                        <strong>Time Travel:</strong> Sim<br>
+                        <strong>Schema Evolution:</strong> Sim
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>📊 Jupyter Lab</h4>
+                    <p><strong>Ambiente Interativo</strong></p>
+                    <p style="margin-top: 1rem;">Ambiente interativo para desenvolvimento, análise de dados, execução de notebooks e consultas SQL.</p>
+                    <div class="success-box" style="margin-top: 1rem; padding: 1rem;">
+                        <span class="status-indicator online"></span>
+                        <strong>Status:</strong> Online<br>
+                        <strong>Porta:</strong> 8889<br>
+                        <strong>URL:</strong> <a href="http://49.13.203.251:8889" target="_blank" style="color: var(--accent-success);">http://49.13.203.251:8889</a>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Estrutura de Armazenamento no MinIO</h3>
+            
+            <div class="info-box" style="margin-bottom: 2rem;">
+                <h4 style="margin-top: 0; color: var(--accent-primary);">📦 Bucket: <code style="background: rgba(99, 102, 241, 0.2); padding: 0.2rem 0.5rem; border-radius: 4px;">govbr</code></h4>
+                <p style="margin-bottom: 0.5rem;"><strong>Endpoint:</strong> <code>ch8ai-minio.l6zv5a.easypanel.host</code></p>
+                <p style="margin-bottom: 0.5rem;"><strong>Protocolo:</strong> HTTPS (S3A Compatible)</p>
+                <p style="margin-bottom: 0;"><strong>Formato:</strong> Parquet com compressão Snappy</p>
+            </div>
+
+            <!-- Diagrama Hierárquico do MinIO -->
+            <div class="diagram-container">
+                <div class="mermaid">
+graph TB
+    subgraph BUCKET["🗄️ Bucket: govbr"]
+        subgraph BRONZE["🥉 Camada BRONZE<br/>Raw Data"]
+            BRONZE_IBGE["📊 ibge/"]
+            BRONZE_PORTAL["🏛️ portal_transparencia/"]
+            
+            BRONZE_IBGE --> IBGE_MUN["municipios/<br/>dt=YYYYMMDD/data.parquet<br/>~5.570 registros"]
+            BRONZE_IBGE --> IBGE_EST["estados/<br/>dt=YYYYMMDD/data.parquet<br/>27 registros"]
+            BRONZE_IBGE --> IBGE_POP["populacao_estados/<br/>dt=YYYYMMDD/data.parquet<br/>27 registros"]
+            
+            BRONZE_PORTAL --> PORTAL_BPC["bpc_municipios/<br/>dt=YYYYMMDD/data.parquet<br/>Variável"]
+            BRONZE_PORTAL --> PORTAL_ORG["orgaos_siafi/<br/>dt=YYYYMMDD/data.parquet<br/>~500 registros"]
+        end
+        
+        subgraph PRATA["🥈 Camada PRATA<br/>Cleaned & Structured"]
+            PRATA_DIM_MUN["dim_municipios/<br/>Dimensão de Municípios<br/>Enriquecida com Estados"]
+            PRATA_DIM_EST["dim_estados/<br/>Dimensão de Estados<br/>Com Agregações BPC"]
+            PRATA_FATO_BPC["fato_bpc/<br/>Fato de BPC<br/>Relacionado com Municípios"]
+            PRATA_DIM_ORG["dim_orgaos/<br/>Dimensão de Órgãos<br/>Normalizada"]
+        end
+        
+        subgraph OURO["🥇 Camada OURO<br/>Enriched & Analytics Ready"]
+            OURO_DIM_MUN["dim_municipios_enriquecida/<br/>Com Classificações<br/>e Indicadores"]
+            OURO_DIM_EST["dim_estados_enriquecida/<br/>Com Rankings<br/>e Métricas Avançadas"]
+            OURO_FATO_BPC["fato_bpc_enriquecido/<br/>Com Trimestres, Semestres<br/>e Faixas de Valor"]
+            OURO_AGG_REG["agregacao_bpc_por_regiao/<br/>Agregações por Região<br/>Somas, Médias, Medianas"]
+            OURO_AGG_EST["agregacao_bpc_por_estado/<br/>Agregações por Estado<br/>Valor Per Capita"]
+            OURO_TOP10["top_10_municipios_valor_bpc/<br/>Top 10 Municípios<br/>Ordenados por Valor"]
+        end
+        
+        BRONZE --> PRATA
+        PRATA --> OURO
+    end
+    
+    style BUCKET fill:#8b5cf6,stroke:#7c3aed,color:#fff,stroke-width:3px
+    style BRONZE fill:#cd7f32,stroke:#b87333,color:#fff
+    style PRATA fill:#c0c0c0,stroke:#a8a8a8,color:#000
+    style OURO fill:#ffd700,stroke:#ffed4e,color:#000
+    style BRONZE_IBGE fill:#cd7f32,stroke:#b87333,color:#fff
+    style BRONZE_PORTAL fill:#cd7f32,stroke:#b87333,color:#fff
+                </div>
+            </div>
+
+            <!-- Cards Detalhados por Camada -->
+            <div class="card-grid" style="margin-top: 2rem;">
+                <div class="card">
+                    <h4>🥉 Camada BRONZE</h4>
+                    <p><strong>Propósito:</strong> Armazenar dados brutos coletados diretamente das APIs</p>
+                    <div style="margin-top: 1rem;">
+                        <p><strong>📁 Estrutura:</strong></p>
+                        <ul style="margin-left: 1rem; font-size: 0.9rem;">
+                            <li><code>bronze/ibge/municipios/</code></li>
+                            <li><code>bronze/ibge/estados/</code></li>
+                            <li><code>bronze/ibge/populacao_estados/</code></li>
+                            <li><code>bronze/portal_transparencia/bpc_municipios/</code></li>
+                            <li><code>bronze/portal_transparencia/orgaos_siafi/</code></li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>📊 Particionamento:</strong> Por data (dt=YYYYMMDD)</p>
+                        <p><strong>💾 Formato:</strong> Parquet (Snappy)</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🥈 Camada PRATA</h4>
+                    <p><strong>Propósito:</strong> Dados tratados, limpos e relacionados</p>
+                    <div style="margin-top: 1rem;">
+                        <p><strong>📁 Estrutura:</strong></p>
+                        <ul style="margin-left: 1rem; font-size: 0.9rem;">
+                            <li><code>prata/dim_municipios/</code> - Dimensão</li>
+                            <li><code>prata/dim_estados/</code> - Dimensão</li>
+                            <li><code>prata/fato_bpc/</code> - Fato</li>
+                            <li><code>prata/dim_orgaos/</code> - Dimensão</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>🔧 Transformações:</strong> Joins, Normalização, Remoção de Duplicatas</p>
+                        <p><strong>💾 Formato:</strong> Parquet (Snappy)</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🥇 Camada OURO</h4>
+                    <p><strong>Propósito:</strong> Dados enriquecidos prontos para análise</p>
+                    <div style="margin-top: 1rem;">
+                        <p><strong>📁 Estrutura:</strong></p>
+                        <ul style="margin-left: 1rem; font-size: 0.9rem;">
+                            <li><code>ouro/dim_municipios_enriquecida/</code></li>
+                            <li><code>ouro/dim_estados_enriquecida/</code></li>
+                            <li><code>ouro/fato_bpc_enriquecido/</code></li>
+                            <li><code>ouro/agregacao_bpc_por_regiao/</code></li>
+                            <li><code>ouro/agregacao_bpc_por_estado/</code></li>
+                            <li><code>ouro/top_10_municipios_valor_bpc/</code></li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>✨ Enriquecimentos:</strong> Classificações, Rankings, Agregações</p>
+                        <p><strong>💾 Formato:</strong> Parquet (Snappy)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualização em Árvore Melhorada -->
+            <h4 style="margin-top: 2rem;">Estrutura Detalhada do Bucket</h4>
+            
+            <div class="tree-structure-modern">
+                <!-- BRONZE LAYER -->
+                <div class="tree-layer bronze">
+                    <div class="tree-layer-header">
+                        <span class="tree-layer-icon">🥉</span>
+                        <span class="tree-layer-title">Camada BRONZE - Dados Brutos</span>
+                        <span class="tree-layer-badge">Raw Data</span>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">📊</span>
+                        <span class="tree-path-name">bronze/ibge/municipios/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">~5.570 registros</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">🗺️</span>
+                        <span class="tree-path-name">bronze/ibge/estados/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">27 registros</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">👥</span>
+                        <span class="tree-path-name">bronze/ibge/populacao_estados/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">27 registros</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">💰</span>
+                        <span class="tree-path-name">bronze/portal_transparencia/bpc_municipios/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Variável</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">🏛️</span>
+                        <span class="tree-path-name">bronze/portal_transparencia/orgaos_siafi/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">~500 registros</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRATA LAYER -->
+                <div class="tree-layer prata">
+                    <div class="tree-layer-header">
+                        <span class="tree-layer-icon">🥈</span>
+                        <span class="tree-layer-title">Camada PRATA - Dados Tratados</span>
+                        <span class="tree-layer-badge">Cleaned</span>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">📍</span>
+                        <span class="tree-path-name">prata/dim_municipios/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Enriquecida</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">🗺️</span>
+                        <span class="tree-path-name">prata/dim_estados/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Com Agregações</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">📈</span>
+                        <span class="tree-path-name">prata/fato_bpc/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Relacionado</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">🏢</span>
+                        <span class="tree-path-name">prata/dim_orgaos/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Normalizado</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OURO LAYER -->
+                <div class="tree-layer ouro">
+                    <div class="tree-layer-header">
+                        <span class="tree-layer-icon">🥇</span>
+                        <span class="tree-layer-title">Camada OURO - Dados Enriquecidos</span>
+                        <span class="tree-layer-badge">Analytics Ready</span>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">⭐</span>
+                        <span class="tree-path-name">ouro/dim_municipios_enriquecida/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Classificações</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">🏆</span>
+                        <span class="tree-path-name">ouro/dim_estados_enriquecida/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Rankings</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">📊</span>
+                        <span class="tree-path-name">ouro/fato_bpc_enriquecido/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Temporal</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">📈</span>
+                        <span class="tree-path-name">ouro/agregacao_bpc_por_regiao/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Agregações</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">📉</span>
+                        <span class="tree-path-name">ouro/agregacao_bpc_por_estado/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Per Capita</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                    <div class="tree-path-item">
+                        <span class="tree-path-icon">🎯</span>
+                        <span class="tree-path-name">ouro/top_10_municipios_valor_bpc/dt=20241201/data.parquet</span>
+                        <div class="tree-path-meta">
+                            <span class="tree-path-count">Top 10</span>
+                            <span class="tree-path-format">Parquet</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagrama de Fluxo de Dados no MinIO -->
+            <h4 style="margin-top: 2rem;">Fluxo de Dados no MinIO</h4>
+            <div class="diagram-container">
+                <div class="mermaid">
+flowchart TD
+    subgraph SOURCES["🌐 Fontes de Dados"]
+        API1["IBGE API<br/>Municípios, Estados"]
+        API2["Portal Transparência<br/>BPC, Órgãos"]
+    end
+    
+    subgraph PIPELINE_SCRIPTS["⚙️ Scripts de Processamento"]
+        SCRIPT1["01_bronze_ingestion.py<br/>Coleta Dados Brutos"]
+        SCRIPT2["02_prata_transformacao.py<br/>Trata e Relaciona"]
+        SCRIPT3["03_ouro_enriquecimento.py<br/>Enriquece com Métricas"]
+    end
+    
+    subgraph STORAGE["🗄️ Armazenamento MinIO"]
+        B1["bronze/ibge/municipios/"]
+        B2["bronze/ibge/estados/"]
+        B3["bronze/portal_transparencia/"]
+        P1["prata/dim_municipios/"]
+        P2["prata/fato_bpc/"]
+        O1["ouro/dim_municipios_enriquecida/"]
+        O2["ouro/agregacao_bpc_por_regiao/"]
+    end
+    
+    subgraph CONSUMERS["👥 Consumidores"]
+        SPARK["⚡ Apache Spark<br/>S3A Protocol"]
+        JUPYTER["📊 Jupyter Lab<br/>Análise Interativa"]
+        DUCKDB["🦆 DuckDB<br/>SQL Queries"]
+    end
+    
+    API1 --> SCRIPT1
+    API2 --> SCRIPT1
+    SCRIPT1 -->|"Salva Parquet"| B1
+    SCRIPT1 -->|"Salva Parquet"| B2
+    SCRIPT1 -->|"Salva Parquet"| B3
+    B1 --> SCRIPT2
+    B2 --> SCRIPT2
+    B3 --> SCRIPT2
+    SCRIPT2 -->|"Salva Parquet"| P1
+    SCRIPT2 -->|"Salva Parquet"| P2
+    P1 --> SCRIPT3
+    P2 --> SCRIPT3
+    SCRIPT3 -->|"Salva Parquet"| O1
+    SCRIPT3 -->|"Salva Parquet"| O2
+    O1 -->|"S3A Protocol"| SPARK
+    O2 -->|"S3A Protocol"| SPARK
+    SPARK --> JUPYTER
+    O1 -->|"HTTPFS"| DUCKDB
+    O2 -->|"HTTPFS"| DUCKDB
+    
+    style SOURCES fill:#3b82f6,stroke:#2563eb,color:#fff,stroke-width:2px
+    style PIPELINE_SCRIPTS fill:#f59e0b,stroke:#d97706,color:#fff,stroke-width:2px
+    style STORAGE fill:#8b5cf6,stroke:#7c3aed,color:#fff,stroke-width:2px
+    style CONSUMERS fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px
+                </div>
+            </div>
+
+            <!-- Exemplo de Acesso ao MinIO -->
+            <h4 style="margin-top: 2rem;">🔍 Como Acessar Dados no MinIO</h4>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🐍 Python (MinIO Client)</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Use a biblioteca <code>minio</code> para acessar objetos diretamente
+                    </p>
+                    <div class="code-example">
+                        <pre><code><span class="keyword">from</span> minio <span class="keyword">import</span> Minio
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> io
+
+<span class="comment"># 1. Conectar ao MinIO</span>
+client = Minio(
+    <span class="string">"ch8ai-minio.l6zv5a.easypanel.host"</span>,
+    access_key=<span class="string">"admin"</span>,
+    secret_key=<span class="string">"1q2w3e4r"</span>,
+    secure=<span class="keyword">True</span>  <span class="comment"># HTTPS</span>
+)
+
+<span class="comment"># 2. Ler arquivo Parquet da camada Bronze</span>
+response = client.get_object(
+    <span class="string">"govbr"</span>,  <span class="comment"># Bucket</span>
+    <span class="string">"bronze/ibge/municipios/dt=20241201/data.parquet"</span>
+)
+
+<span class="comment"># 3. Converter para DataFrame Pandas</span>
+df = pd.read_parquet(io.BytesIO(response.read()))
+response.close()
+response.release_conn()
+
+<span class="comment"># 4. Visualizar dados</span>
+<span class="keyword">print</span>(df.head())
+<span class="keyword">print</span>(<span class="string">f"Total de registros: {len(df)}"</span>)</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informações Técnicas -->
+            <div class="success-box" style="margin-top: 2rem;">
+                <h4>📋 Especificações Técnicas do Armazenamento</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div>
+                        <p><strong>📦 Formato de Arquivo:</strong></p>
+                        <ul style="margin-left: 1.5rem;">
+                            <li>Parquet (Apache Parquet)</li>
+                            <li>Compressão: Snappy</li>
+                            <li>Schema: Preservado</li>
+                            <li>Encoding: UTF-8</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p><strong>🗂️ Particionamento:</strong></p>
+                        <ul style="margin-left: 1.5rem;">
+                            <li>Por data: dt=YYYYMMDD</li>
+                            <li>Permite time travel</li>
+                            <li>Facilita queries por período</li>
+                            <li>Otimiza leitura incremental</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p><strong>🔐 Acesso:</strong></p>
+                        <ul style="margin-left: 1.5rem;">
+                            <li>S3A Protocol (Spark)</li>
+                            <li>MinIO SDK (Python)</li>
+                            <li>HTTPFS (DuckDB)</li>
+                            <li>Web Console</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p><strong>⚡ Performance:</strong></p>
+                        <ul style="margin-left: 1.5rem;">
+                            <li>Formato colunar</li>
+                            <li>Compressão eficiente</li>
+                            <li>Suporte a pushdown predicates</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exemplo de Acesso ao MinIO -->
+            <h4 style="margin-top: 2rem;">🔍 Como Acessar Dados no MinIO</h4>
+            
+            <style>
+                .code-example {
+                    background: #1e1e2e;
+                    border: 1px solid var(--border-color);
+                    border-radius: 8px;
+                    padding: 1.5rem;
+                    margin: 1rem 0;
+                    position: relative;
+                }
+                .code-example h5 {
+                    color: var(--accent-primary);
+                    margin: 0 0 1rem 0;
+                    font-size: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                .code-example pre {
+                    margin: 0;
+                    padding: 0;
+                    background: transparent;
+                    border: none;
+                    overflow-x: auto;
+                }
+                .code-example code {
+                    font-family: 'Fira Code', 'Courier New', monospace;
+                    font-size: 0.9rem;
+                    line-height: 1.6;
+                    color: #e2e8f0;
+                }
+                .code-example .keyword { color: #c678dd; font-weight: 600; }
+                .code-example .string { color: #98c379; }
+                .code-example .comment { color: #5c6370; font-style: italic; }
+                .code-example .function { color: #61afef; }
+                .code-example .number { color: #d19a66; }
+                .code-example .variable { color: #e06c75; }
+            </style>
+            
+            <div class="card-grid" style="margin-top: 1rem;">
+                <div class="card">
+                    <h4>🐍 Python (MinIO Client)</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Use a biblioteca <code>minio</code> para acessar objetos diretamente
+                    </p>
+                    <div class="code-example">
+                        <pre><code><span class="keyword">from</span> minio <span class="keyword">import</span> Minio
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> io
+
+<span class="comment"># Conectar ao MinIO</span>
+client = Minio(
+    <span class="string">"ch8ai-minio.l6zv5a.easypanel.host"</span>,
+    access_key=<span class="string">"admin"</span>,
+    secret_key=<span class="string">"1q2w3e4r"</span>,
+    secure=<span class="keyword">True</span>
+)
+
+<span class="comment"># Ler arquivo Parquet</span>
+response = client.get_object(
+    <span class="string">"govbr"</span>,
+    <span class="string">"bronze/ibge/municipios/dt=20241201/data.parquet"</span>
+)
+
+df = pd.read_parquet(io.BytesIO(response.read()))
+<span class="keyword">print</span>(df.head())</code></pre>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>⚡ Apache Spark</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Use o protocolo S3A para ler dados diretamente do MinIO
+                    </p>
+                    <div class="code-example">
+                        <pre><code><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SparkSession
+
+spark = SparkSession.builder \
+    .config(<span class="string">"spark.hadoop.fs.s3a.endpoint"</span>, 
+            <span class="string">"https://ch8ai-minio.l6zv5a.easypanel.host"</span>) \
+    .config(<span class="string">"spark.hadoop.fs.s3a.access.key"</span>, <span class="string">"admin"</span>) \
+    .config(<span class="string">"spark.hadoop.fs.s3a.secret.key"</span>, <span class="string">"1q2w3e4r"</span>) \
+    .getOrCreate()
+
+<span class="comment"># Ler dados Parquet</span>
+df = spark.read.parquet(<span class="string">"s3a://govbr/bronze/ibge/municipios/"</span>)
+df.show()</code></pre>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🦆 DuckDB</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Use HTTPFS extension para consultas SQL diretas
+                    </p>
+                    <div class="code-example">
+                        <pre><code><span class="keyword">import</span> duckdb
+
+<span class="comment"># Instalar extensão HTTPFS</span>
+duckdb.sql(<span class="string">"INSTALL httpfs"</span>)
+duckdb.sql(<span class="string">"LOAD httpfs"</span>)
+
+<span class="comment"># Configurar credenciais</span>
+duckdb.sql(<span class="string">"""
+    SET s3_endpoint='ch8ai-minio.l6zv5a.easypanel.host';
+    SET s3_access_key_id='admin';
+    SET s3_secret_access_key='1q2w3e4r';
+    SET s3_use_ssl=true;
+"""</span>)
+
+<span class="comment"># Consultar dados</span>
+df = duckdb.sql(<span class="string">"""
+    SELECT * FROM read_parquet('s3://govbr/bronze/ibge/municipios/dt=20241201/data.parquet')
+"""</span>).df()</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagrama de Fluxo de Dados no MinIO -->
+            <h4 style="margin-top: 2rem;">Fluxo de Dados no MinIO</h4>
+            <div class="diagram-container">
+                <div class="mermaid">
+flowchart TD
+    subgraph SOURCES["🌐 Fontes de Dados"]
+        API1["IBGE API<br/>Municípios, Estados"]
+        API2["Portal Transparência<br/>BPC, Órgãos"]
+    end
+    
+    subgraph PIPELINE_SCRIPTS["⚙️ Scripts de Processamento"]
+        SCRIPT1["01_bronze_ingestion.py<br/>Coleta Dados Brutos"]
+        SCRIPT2["02_prata_transformacao.py<br/>Trata e Relaciona"]
+        SCRIPT3["03_ouro_enriquecimento.py<br/>Enriquece com Métricas"]
+    end
+    
+    subgraph STORAGE["🗄️ MinIO: Bucket govbr"]
+        subgraph BRONZE_LAYER["🥉 bronze/"]
+            B1["ibge/municipios/<br/>Parquet"]
+            B2["ibge/estados/<br/>Parquet"]
+            B3["portal_transparencia/<br/>bpc, orgaos<br/>Parquet"]
+        end
+        
+        subgraph PRATA_LAYER["🥈 prata/"]
+            P1["dim_municipios/<br/>Parquet"]
+            P2["dim_estados/<br/>Parquet"]
+            P3["fato_bpc/<br/>Parquet"]
+        end
+        
+        subgraph OURO_LAYER["🥇 ouro/"]
+            O1["dim_municipios_enriquecida/<br/>Parquet"]
+            O2["dim_estados_enriquecida/<br/>Parquet"]
+            O3["fato_bpc_enriquecido/<br/>Parquet"]
+            O4["agregacoes/<br/>Parquet"]
+        end
+    end
+    
+    subgraph CONSUMERS["📊 Consumidores de Dados"]
+        SPARK["⚡ Apache Spark<br/>SQL Queries"]
+        JUPYTER["📓 Jupyter Lab<br/>Análise Interativa"]
+        DUCKDB["🦆 DuckDB<br/>Consultas Rápidas"]
+    end
+    
+    API1 --> SCRIPT1
+    API2 --> SCRIPT1
+    
+    SCRIPT1 -->|"Salva Parquet"| B1
+    SCRIPT1 -->|"Salva Parquet"| B2
+    SCRIPT1 -->|"Salva Parquet"| B3
+    
+    B1 --> SCRIPT2
+    B2 --> SCRIPT2
+    B3 --> SCRIPT2
+    
+    SCRIPT2 -->|"Salva Parquet"| P1
+    SCRIPT2 -->|"Salva Parquet"| P2
+    SCRIPT2 -->|"Salva Parquet"| P3
+    
+    P1 --> SCRIPT3
+    P2 --> SCRIPT3
+    P3 --> SCRIPT3
+    
+    SCRIPT3 -->|"Salva Parquet"| O1
+    SCRIPT3 -->|"Salva Parquet"| O2
+    SCRIPT3 -->|"Salva Parquet"| O3
+    SCRIPT3 -->|"Salva Parquet"| O4
+    
+    O1 -->|"S3A Protocol"| SPARK
+    O2 -->|"S3A Protocol"| SPARK
+    O3 -->|"S3A Protocol"| SPARK
+    O4 -->|"S3A Protocol"| SPARK
+    
+    O1 -->|"MinIO Client"| JUPYTER
+    O2 -->|"MinIO Client"| JUPYTER
+    O3 -->|"MinIO Client"| JUPYTER
+    
+    O1 -->|"HTTPFS"| DUCKDB
+    O2 -->|"HTTPFS"| DUCKDB
+    
+    style SOURCES fill:#6366f1,stroke:#4f46e5,color:#fff,stroke-width:2px
+    style PIPELINE_SCRIPTS fill:#f59e0b,stroke:#d97706,color:#fff,stroke-width:2px
+    style STORAGE fill:#8b5cf6,stroke:#7c3aed,color:#fff,stroke-width:3px
+    style BRONZE_LAYER fill:#cd7f32,stroke:#b87333,color:#fff
+    style PRATA_LAYER fill:#c0c0c0,stroke:#a8a8a8,color:#000
+    style OURO_LAYER fill:#ffd700,stroke:#ffed4e,color:#000
+    style CONSUMERS fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px
+                </div>
+            </div>
+
+            <!-- Informações Técnicas -->
+            <div class="success-box" style="margin-top: 2rem;">
+                <h4>📋 Especificações Técnicas do Armazenamento</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div>
+                        <p><strong>📦 Formato de Arquivo:</strong></p>
+                        <ul style="margin-left: 1.5rem;">
+                            <li>Parquet (Apache Parquet)</li>
+                            <li>Compressão: Snappy</li>
+                            <li>Schema: Preservado</li>
+                            <li>Encoding: UTF-8</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p><strong>🗂️ Particionamento:</strong></p>
+                        <ul style="margin-left: 1.5rem;">
+                            <li>Por data: dt=YYYYMMDD</li>
+                            <li>Permite time travel</li>
+                            <li>Facilita queries por período</li>
+                            <li>Otimiza leitura incremental</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p><strong>🔐 Acesso:</strong></p>
+                        <ul style="margin-left: 1.5rem;">
+                            <li>Protocolo: S3A (HTTPS)</li>
+                            <li>Autenticação: Access Key</li>
+                            <li>Compatível: AWS S3 SDK</li>
+                            <li>Suporte: Spark, Pandas, DuckDB</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p><strong>⚡ Performance:</strong></p>
+                        <ul style="margin-left: 1.5rem;">
+                            <li>Formato colunar</li>
+                            <li>Leitura otimizada</li>
+                            <li>Compressão eficiente</li>
+                            <li>Suporte a pushdown predicates</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exemplo de Acesso ao MinIO -->
+            <h4 style="margin-top: 2rem;">🔍 Como Acessar Dados no MinIO</h4>
+            
+            <style>
+                .code-example {
+                    background: #1e1e2e;
+                    border: 1px solid var(--border-color);
+                    border-radius: 8px;
+                    padding: 1.5rem;
+                    margin: 1rem 0;
+                    position: relative;
+                }
+                .code-example h5 {
+                    color: var(--accent-primary);
+                    margin: 0 0 1rem 0;
+                    font-size: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                .code-example pre {
+                    margin: 0;
+                    padding: 0;
+                    background: transparent;
+                    border: none;
+                    overflow-x: auto;
+                }
+                .code-example code {
+                    font-family: 'Fira Code', 'Courier New', monospace;
+                    font-size: 0.9rem;
+                    line-height: 1.6;
+                    color: #e2e8f0;
+                }
+                .code-example .keyword { color: #c678dd; font-weight: 600; }
+                .code-example .string { color: #98c379; }
+                .code-example .comment { color: #5c6370; font-style: italic; }
+                .code-example .function { color: #61afef; }
+                .code-example .number { color: #d19a66; }
+                .code-example .variable { color: #e06c75; }
+            </style>
+            
+            <div class="card-grid" style="margin-top: 1rem;">
+                <div class="card">
+                    <h4>🐍 Python (MinIO Client)</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Use a biblioteca <code>minio</code> para acessar objetos diretamente
+                    </p>
+                    <div class="code-example">
+                        <pre><code><span class="keyword">from</span> minio <span class="keyword">import</span> Minio
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> io
+
+<span class="comment"># 1. Conectar ao MinIO</span>
+client = Minio(
+    <span class="string">"ch8ai-minio.l6zv5a.easypanel.host"</span>,
+    access_key=<span class="string">"admin"</span>,
+    secret_key=<span class="string">"1q2w3e4r"</span>,
+    secure=<span class="keyword">True</span>  <span class="comment"># HTTPS</span>
+)
+
+<span class="comment"># 2. Ler arquivo Parquet da camada Bronze</span>
+response = client.get_object(
+    <span class="string">"govbr"</span>,  <span class="comment"># Bucket</span>
+    <span class="string">"bronze/ibge/municipios/dt=20241201/data.parquet"</span>
+)
+
+<span class="comment"># 3. Converter para DataFrame Pandas</span>
+df = pd.read_parquet(io.BytesIO(response.read()))
+response.close()
+response.release_conn()
+
+<span class="comment"># 4. Visualizar dados</span>
+<span class="keyword">print</span>(df.head())
+<span class="keyword">print</span>(<span class="string">f"Total de registros: {len(df)}"</span>)</code></pre>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>⚡ Apache Spark</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Configure o S3A filesystem para ler dados particionados
+                    </p>
+                    <div class="code-example">
+                        <pre><code><span class="keyword">from</span> pyspark.sql <span class="keyword">import</span> SparkSession
+
+<span class="comment"># 1. Configurar Spark com S3A</span>
+spark = SparkSession.builder \
+    .appName(<span class="string">"GovBR Data Lake"</span>) \
+    .config(<span class="string">"spark.hadoop.fs.s3a.endpoint"</span>, 
+            <span class="string">"https://ch8ai-minio.l6zv5a.easypanel.host"</span>) \
+    .config(<span class="string">"spark.hadoop.fs.s3a.access.key"</span>, <span class="string">"admin"</span>) \
+    .config(<span class="string">"spark.hadoop.fs.s3a.secret.key"</span>, <span class="string">"1q2w3e4r"</span>) \
+    .config(<span class="string">"spark.hadoop.fs.s3a.path.style.access"</span>, <span class="string">"true"</span>) \
+    .getOrCreate()
+
+<span class="comment"># 2. Ler dados particionados (lê todas as partições)</span>
+df = spark.read.parquet(
+    <span class="string">"s3a://govbr/bronze/ibge/municipios/"</span>
+)
+
+<span class="comment"># 3. Consultar com SQL</span>
+df.createOrReplaceTempView(<span class="string">"municipios"</span>)
+result = spark.sql(<span class="string">"""
+    SELECT uf_sigla, COUNT(*) as total 
+    FROM municipios 
+    GROUP BY uf_sigla
+"""</span>)
+result.show()</code></pre>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🦆 DuckDB</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Use HTTPFS para consultar Parquet diretamente do S3
+                    </p>
+                    <div class="code-example">
+                        <pre><code><span class="keyword">import</span> duckdb
+
+<span class="comment"># 1. Instalar e carregar extensão HTTPFS</span>
+conn = duckdb.connect()
+conn.execute(<span class="string">"INSTALL httpfs"</span>)
+conn.execute(<span class="string">"LOAD httpfs"</span>)
+
+<span class="comment"># 2. Configurar credenciais S3</span>
+conn.execute(<span class="string">"SET s3_endpoint='ch8ai-minio.l6zv5a.easypanel.host'"</span>)
+conn.execute(<span class="string">"SET s3_access_key_id='admin'"</span>)
+conn.execute(<span class="string">"SET s3_secret_access_key='1q2w3e4r'"</span>)
+conn.execute(<span class="string">"SET s3_use_ssl=true"</span>)
+conn.execute(<span class="string">"SET s3_url_style='path'"</span>)
+
+<span class="comment"># 3. Consultar dados Parquet diretamente</span>
+df = conn.query(<span class="string">"""
+    SELECT 
+        uf_sigla,
+        COUNT(*) as total_municipios,
+        regiao_nome
+    FROM read_parquet(
+        's3://govbr/bronze/ibge/municipios/dt=20241201/data.parquet'
+    )
+    GROUP BY uf_sigla, regiao_nome
+    ORDER BY total_municipios DESC
+"""</span>).df()
+
+<span class="keyword">print</span>(df)</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagrama de Acesso ao MinIO -->
+            <h4 style="margin-top: 2rem;">🔗 Padrões de Acesso ao MinIO</h4>
+            <div class="diagram-container">
+                <div class="mermaid">
+flowchart LR
+    subgraph CLIENTS["👥 Clientes e Ferramentas"]
+        PYTHON["🐍 Python<br/>minio library<br/>Pandas DataFrame"]
+        SPARK["⚡ Apache Spark<br/>S3A Filesystem<br/>Parquet Reader"]
+        DUCKDB["🦆 DuckDB<br/>HTTPFS Extension<br/>SQL Queries"]
+        WEB["🌐 MinIO Console<br/>Web Browser<br/>Gerenciamento"]
+    end
+    
+    subgraph API["🔌 API Layer"]
+        HTTPS["HTTPS REST API<br/>S3-Compatible<br/>ch8ai-minio.l6zv5a.easypanel.host"]
+    end
+    
+    subgraph SERVER["🗄️ MinIO Server"]
+        BUCKET["📦 Bucket: govbr"]
+        BRONZE["🥉 bronze/<br/>Raw Data"]
+        PRATA["🥈 prata/<br/>Cleaned"]
+        OURO["🥇 ouro/<br/>Enriched"]
+    end
+    
+    PYTHON -->|"MinIO SDK<br/>get_object()"| HTTPS
+    SPARK -->|"S3A Protocol<br/>spark.read.parquet()"| HTTPS
+    DUCKDB -->|"HTTPFS<br/>read_parquet()"| HTTPS
+    WEB -->|"Web UI<br/>Browser"| HTTPS
+    
+    HTTPS -->|"Authenticated<br/>Access"| BUCKET
+    
+    BUCKET --> BRONZE
+    BUCKET --> PRATA
+    BUCKET --> OURO
+    
+    style CLIENTS fill:#6366f1,stroke:#4f46e5,color:#fff,stroke-width:2px
+    style API fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px
+    style SERVER fill:#8b5cf6,stroke:#7c3aed,color:#fff,stroke-width:3px
+    style BUCKET fill:#8b5cf6,stroke:#7c3aed,color:#fff
+    style BRONZE fill:#cd7f32,stroke:#b87333,color:#fff
+    style PRATA fill:#c0c0c0,stroke:#a8a8a8,color:#000
+    style OURO fill:#ffd700,stroke:#ffed4e,color:#000
+                </div>
+            </div>
+
+            <!-- Informações de Conexão -->
+            <div class="info-box" style="margin-top: 2rem;">
+                <h4 style="margin-top: 0; color: var(--accent-primary);">🔑 Credenciais de Acesso</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div>
+                        <p><strong>🌐 Endpoint:</strong></p>
+                        <code style="background: rgba(99, 102, 241, 0.2); padding: 0.5rem; display: block; margin-top: 0.5rem; border-radius: 4px;">
+                            ch8ai-minio.l6zv5a.easypanel.host
+                        </code>
+                    </div>
+                    <div>
+                        <p><strong>🔐 Access Key:</strong></p>
+                        <code style="background: rgba(99, 102, 241, 0.2); padding: 0.5rem; display: block; margin-top: 0.5rem; border-radius: 4px;">
+                            admin
+                        </code>
+                    </div>
+                    <div>
+                        <p><strong>🔒 Secret Key:</strong></p>
+                        <code style="background: rgba(99, 102, 241, 0.2); padding: 0.5rem; display: block; margin-top: 0.5rem; border-radius: 4px;">
+                            1q2w3e4r
+                        </code>
+                    </div>
+                    <div>
+                        <p><strong>📦 Bucket:</strong></p>
+                        <code style="background: rgba(99, 102, 241, 0.2); padding: 0.5rem; display: block; margin-top: 0.5rem; border-radius: 4px;">
+                            govbr
+                        </code>
+                    </div>
+                </div>
+                <p style="margin-top: 1rem; color: var(--text-secondary);">
+                    <strong>⚠️ Nota:</strong> Estas credenciais são para uso em ambiente de desenvolvimento. 
+                    Em produção, utilize credenciais seguras e políticas de acesso restritivas.
+                </p>
+            </div>
+        </section>
+
+        <!-- Ingestão -->
+        <section id="ingestao" class="section">
+            <h2>📥 Ingestão de Dados</h2>
+            
+            <h3>Fontes de Dados</h3>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🌐 IBGE API</h4>
+                    <p><strong>Base URL:</strong> <code style="color: var(--accent-primary);">https://servicodados.ibge.gov.br/api/v1</code></p>
+                    <p style="margin-top: 1rem;"><strong>Autenticação:</strong> Não requerida</p>
+                    
+                    <h4 style="margin-top: 1.5rem;">Endpoints Utilizados:</h4>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><code>/localidades/municipios</code> - ~5.570 municípios</li>
+                        <li><code>/localidades/estados</code> - 27 estados</li>
+                        <li><code>/projecoes/populacao/{uf_id}</code> - População por estado</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h4>🏛️ Portal da Transparência</h4>
+                    <p><strong>Base URL:</strong> <code style="color: var(--accent-primary);">http://api.portaldatransparencia.gov.br/api-de-dados</code></p>
+                    <p style="margin-top: 1rem;"><strong>Autenticação:</strong> Header <code>chave-api-dados</code></p>
+                    
+                    <h4 style="margin-top: 1.5rem;">Endpoints Utilizados:</h4>
+                    <ul style="margin-top: 0.5rem;">
+                        <li><code>/bpc-por-municipio</code> - BPC mensal por município</li>
+                        <li><code>/orgaos-siafi</code> - ~500 órgãos SIAFI</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Modos de Execução do Pipeline</h3>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🔄 Modo FULL</h4>
+                    <p><strong>Quando usar:</strong> Primeira execução, recarregamento completo, correção de dados</p>
+                    <p style="margin-top: 1rem;"><strong>Comportamento:</strong> Recarrega todos os dados das APIs, substitui dados existentes</p>
+                    <div class="code-block" style="margin-top: 1rem;">
+                        <code>
+python pipeline_ingestao.py <span class="keyword">--mode</span> <span class="string">full</span>
+                        </code>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>📈 Modo INCREMENTAL</h4>
+                    <p><strong>Quando usar:</strong> Execuções diárias/semanais, atualizações regulares</p>
+                    <p style="margin-top: 1rem;"><strong>Comportamento:</strong> Verifica última partição, coleta apenas dados novos, faz merge</p>
+                    <div class="code-block" style="margin-top: 1rem;">
+                        <code>
+python pipeline_ingestao.py <span class="keyword">--mode</span> <span class="string">incremental</span>
+                        </code>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>🤖 Modo AUTO</h4>
+                    <p><strong>Quando usar:</strong> Execução agendada, automação</p>
+                    <p style="margin-top: 1rem;"><strong>Comportamento:</strong> Decide automaticamente entre FULL ou INCREMENTAL</p>
+                    <div class="code-block" style="margin-top: 1rem;">
+                        <code>
+python pipeline_ingestao.py <span class="keyword">--mode</span> <span class="string">auto</span>
+                        </code>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Fluxo de Execução Detalhado</h3>
+            <div class="flow-execution-modern">
+                <div class="flow-step-card">
+                    <div class="flow-step-number">1</div>
+                    <div class="flow-step-title">
+                        <span class="flow-step-icon">🚀</span>
+                        Inicialização
+                    </div>
+                    <div class="flow-step-description">
+                        Conectar ao MinIO, verificar/criar bucket "govbr", determinar modo de execução (FULL/INCREMENTAL/AUTO)
+                    </div>
+                    <div class="flow-step-details">
+                        <code>Minio() → bucket_exists() → make_bucket()</code>
+                    </div>
+                </div>
+
+                <div class="flow-step-card">
+                    <div class="flow-step-number">2</div>
+                    <div class="flow-step-title">
+                        <span class="flow-step-icon">📊</span>
+                        Coleta IBGE - Municípios
+                    </div>
+                    <div class="flow-step-description">
+                        GET /localidades/municipios → Transformar JSON → DataFrame Pandas → Salvar Parquet
+                    </div>
+                    <div class="flow-step-details">
+                        <code>bronze/ibge/municipios/dt=YYYYMMDD/data.parquet</code>
+                    </div>
+                </div>
+
+                <div class="flow-step-card">
+                    <div class="flow-step-number">3</div>
+                    <div class="flow-step-title">
+                        <span class="flow-step-icon">🗺️</span>
+                        Coleta IBGE - Estados
+                    </div>
+                    <div class="flow-step-description">
+                        GET /localidades/estados → Transformar JSON → DataFrame Pandas → Salvar Parquet
+                    </div>
+                    <div class="flow-step-details">
+                        <code>bronze/ibge/estados/dt=YYYYMMDD/data.parquet</code>
+                    </div>
+                </div>
+
+                <div class="flow-step-card">
+                    <div class="flow-step-number">4</div>
+                    <div class="flow-step-title">
+                        <span class="flow-step-icon">🏛️</span>
+                        Coleta Portal Transparência - Órgãos
+                    </div>
+                    <div class="flow-step-description">
+                        GET /orgaos-siafi → Filtrar códigos inválidos → DataFrame Pandas → Salvar Parquet
+                    </div>
+                    <div class="flow-step-details">
+                        <code>bronze/portal_transparencia/orgaos_siafi/dt=YYYYMMDD/data.parquet</code>
+                    </div>
+                </div>
+
+                <div class="flow-step-card">
+                    <div class="flow-step-number">5</div>
+                    <div class="flow-step-title">
+                        <span class="flow-step-icon">💰</span>
+                        Coleta Portal Transparência - BPC
+                    </div>
+                    <div class="flow-step-description">
+                        Para cada município (amostra): GET /bpc-por-municipio → Consolidar → DataFrame → Salvar Parquet
+                    </div>
+                    <div class="flow-step-details">
+                        <code>bronze/portal_transparencia/bpc_municipios/dt=YYYYMMDD/data.parquet</code>
+                    </div>
+                </div>
+
+                <div class="flow-step-card">
+                    <div class="flow-step-number">6</div>
+                    <div class="flow-step-title">
+                        <span class="flow-step-icon">👥</span>
+                        Coleta IBGE - População
+                    </div>
+                    <div class="flow-step-description">
+                        Para cada estado: GET /projecoes/populacao/{uf_id} → Consolidar → DataFrame → Salvar Parquet
+                    </div>
+                    <div class="flow-step-details">
+                        <code>bronze/ibge/populacao_estados/dt=YYYYMMDD/data.parquet</code>
+                    </div>
+                </div>
+
+                <div class="flow-step-card">
+                    <div class="flow-step-number">7</div>
+                    <div class="flow-step-title">
+                        <span class="flow-step-icon">📈</span>
+                        Resumo e Estatísticas
+                    </div>
+                    <div class="flow-step-description">
+                        Listar arquivos criados, calcular tamanhos, exibir estatísticas de ingestão
+                    </div>
+                    <div class="flow-step-details">
+                        <code>list_objects() → calcular_tamanhos() → exibir_estatisticas()</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4>Formato dos Dados</h4>
+                <p><strong>Todos os dados são salvos em formato Parquet com:</strong></p>
+                <ul>
+                    <li><strong>Compressão:</strong> Snappy (otimizada para velocidade)</li>
+                    <li><strong>Particionamento:</strong> Por data (dt=YYYYMMDD)</li>
+                    <li><strong>Encoding:</strong> UTF-8</li>
+                    <li><strong>Schema:</strong> Preservado do DataFrame Pandas</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Vantagens do Parquet:</strong> Formato colunar otimizado para análise, compressão eficiente, schema embutido, compatível com Spark, Pandas, DuckDB e outras ferramentas.</p>
+            </div>
+        </section>
+
+        <!-- Catálogo -->
+        <section id="catalogo" class="section">
+            <h2>📚 Catálogo de Dados</h2>
+            
+            <h3>Camada BRONZE - Dados Brutos</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dataset</th>
+                            <th>Descrição</th>
+                            <th>Volume</th>
+                            <th>Frequência</th>
+                            <th>Camada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>bronze/ibge/municipios/</code></td>
+                            <td>Lista completa de municípios brasileiros com informações geográficas</td>
+                            <td>~5.570 municípios</td>
+                            <td>Baixa (referência)</td>
+                            <td><span class="badge badge-bronze">Bronze</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>bronze/ibge/estados/</code></td>
+                            <td>Lista de estados brasileiros e regiões</td>
+                            <td>27 estados</td>
+                            <td>Baixa (referência)</td>
+                            <td><span class="badge badge-bronze">Bronze</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>bronze/ibge/populacao_estados/</code></td>
+                            <td>Estimativas de população por estado</td>
+                            <td>27 registros</td>
+                            <td>Anual</td>
+                            <td><span class="badge badge-bronze">Bronze</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>bronze/portal_transparencia/bpc_municipios/</code></td>
+                            <td>Dados de Benefício de Prestação Continuada por município</td>
+                            <td>Variável</td>
+                            <td>Mensal</td>
+                            <td><span class="badge badge-bronze">Bronze</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>bronze/portal_transparencia/orgaos_siafi/</code></td>
+                            <td>Lista de órgãos do Sistema Integrado de Administração Financeira</td>
+                            <td>~500 órgãos</td>
+                            <td>Baixa (referência)</td>
+                            <td><span class="badge badge-bronze">Bronze</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Camada PRATA - Dados Tratados</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dataset</th>
+                            <th>Descrição</th>
+                            <th>Transformações</th>
+                            <th>Camada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>prata/dim_municipios/</code></td>
+                            <td>Dimensão de municípios enriquecida</td>
+                            <td>Merge com estados e população, remoção duplicatas, normalização</td>
+                            <td><span class="badge badge-prata">Prata</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>prata/dim_estados/</code></td>
+                            <td>Dimensão de estados com agregações de BPC</td>
+                            <td>Agregação BPC por estado, cálculo de métricas per capita</td>
+                            <td><span class="badge badge-prata">Prata</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>prata/fato_bpc/</code></td>
+                            <td>Fato de BPC relacionado com dimensão de municípios</td>
+                            <td>Merge com municípios, cálculo valor per capita, extração temporal</td>
+                            <td><span class="badge badge-prata">Prata</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>prata/dim_orgaos/</code></td>
+                            <td>Dimensão de órgãos tratada</td>
+                            <td>Normalização de nomes, remoção duplicatas</td>
+                            <td><span class="badge badge-prata">Prata</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Camada OURO - Dados Enriquecidos</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dataset</th>
+                            <th>Descrição</th>
+                            <th>Enriquecimentos</th>
+                            <th>Camada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>ouro/dim_municipios_enriquecida/</code></td>
+                            <td>Municípios com classificações e indicadores</td>
+                            <td>Classificação por população, siglas de região, versão de dados</td>
+                            <td><span class="badge badge-ouro">Ouro</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>ouro/dim_estados_enriquecida/</code></td>
+                            <td>Estados com métricas avançadas e rankings</td>
+                            <td>Classificações, rankings, indicadores booleanos, densidade</td>
+                            <td><span class="badge badge-ouro">Ouro</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>ouro/fato_bpc_enriquecido/</code></td>
+                            <td>Fato BPC com análises temporais e classificações</td>
+                            <td>Trimestres, semestres, faixas de valor, indicadores de eficiência</td>
+                            <td><span class="badge badge-ouro">Ouro</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>ouro/agregacao_bpc_por_regiao/</code></td>
+                            <td>Agregações de BPC agrupadas por região</td>
+                            <td>Somas, médias, medianas por região</td>
+                            <td><span class="badge badge-ouro">Ouro</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>ouro/agregacao_bpc_por_estado/</code></td>
+                            <td>Agregações de BPC agrupadas por estado</td>
+                            <td>Somas, médias por estado, valor per capita</td>
+                            <td><span class="badge badge-ouro">Ouro</span></td>
+                        </tr>
+                        <tr>
+                            <td><code>ouro/top_10_municipios_valor_bpc/</code></td>
+                            <td>Top 10 municípios ordenados por valor de BPC</td>
+                            <td>Ordenação descendente, limitação a 10 registros</td>
+                            <td><span class="badge badge-ouro">Ouro</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Schema Detalhado - Exemplo: bronze/ibge/municipios/</h3>
+            
+            <div class="schema-table-modern">
+                <div class="schema-header">
+                    <h4>📊 Schema do Dataset: bronze/ibge/municipios/</h4>
+                    <p>Estrutura completa dos dados de municípios brasileiros coletados da API do IBGE</p>
+                </div>
+                <table class="schema-table">
+                    <thead>
+                        <tr>
+                            <th>Campo</th>
+                            <th>Tipo</th>
+                            <th>Descrição</th>
+                            <th>Exemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="schema-field-name">codigo_ibge</span></td>
+                            <td><span class="schema-field-type">str</span></td>
+                            <td class="schema-field-desc">Código IBGE único do município</td>
+                            <td>"3550308"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="schema-field-name">municipio</span></td>
+                            <td><span class="schema-field-type">str</span></td>
+                            <td class="schema-field-desc">Nome oficial do município</td>
+                            <td>"São Paulo"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="schema-field-name">uf_sigla</span></td>
+                            <td><span class="schema-field-type">str</span></td>
+                            <td class="schema-field-desc">Sigla da Unidade Federativa (2 caracteres)</td>
+                            <td>"SP"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="schema-field-name">uf_nome</span></td>
+                            <td><span class="schema-field-type">str</span></td>
+                            <td class="schema-field-desc">Nome completo do estado</td>
+                            <td>"São Paulo"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="schema-field-name">regiao_id</span></td>
+                            <td><span class="schema-field-type">int</span></td>
+                            <td class="schema-field-desc">ID numérico da região geográfica</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td><span class="schema-field-name">regiao_nome</span></td>
+                            <td><span class="schema-field-type">str</span></td>
+                            <td class="schema-field-desc">Nome da região (Norte, Nordeste, etc.)</td>
+                            <td>"Sudeste"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="schema-field-name">microrregiao_id</span></td>
+                            <td><span class="schema-field-type">int</span></td>
+                            <td class="schema-field-desc">ID da microrregião geográfica</td>
+                            <td>35061</td>
+                        </tr>
+                        <tr>
+                            <td><span class="schema-field-name">microrregiao_nome</span></td>
+                            <td><span class="schema-field-type">str</span></td>
+                            <td class="schema-field-desc">Nome da microrregião</td>
+                            <td>"São Paulo"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="schema-field-name">mesorregiao_id</span></td>
+                            <td><span class="schema-field-type">int</span></td>
+                            <td class="schema-field-desc">ID da mesorregião geográfica</td>
+                            <td>3507</td>
+                        </tr>
+                        <tr>
+                            <td><span class="schema-field-name">mesorregiao_nome</span></td>
+                            <td><span class="schema-field-type">str</span></td>
+                            <td class="schema-field-desc">Nome da mesorregião</td>
+                            <td>"Metropolitana de São Paulo"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="info-box" style="margin-top: 1.5rem;">
+                <p><strong>📝 Notas Importantes:</strong></p>
+                <ul style="margin-top: 0.5rem;">
+                    <li><strong>Total de Registros:</strong> ~5.570 municípios brasileiros</li>
+                    <li><strong>Formato:</strong> Parquet com compressão Snappy</li>
+                    <li><strong>Particionamento:</strong> Por data (dt=YYYYMMDD)</li>
+                    <li><strong>Encoding:</strong> UTF-8</li>
+                    <li><strong>Fonte:</strong> IBGE API - /localidades/municipios</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Passo a Passo -->
+        <section id="passo-a-passo" class="section">
+            <h2>🚀 Guia Passo a Passo</h2>
+            
+            <h3>Pré-requisitos</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🐳 Docker</h4>
+                    <p>Docker e Docker Compose instalados e funcionando</p>
+                </div>
+                <div class="card">
+                    <h4>🌐 Internet</h4>
+                    <p>Acesso à internet para baixar imagens e acessar APIs</p>
+                </div>
+                <div class="card">
+                    <h4>🔌 Portas</h4>
+                    <p>Portas 8080 e 8889 disponíveis no sistema</p>
+                </div>
+            </div>
+
+            <h3>Instalação e Configuração</h3>
+            <div class="installation-modern">
+                <div class="install-step-card">
+                    <div class="install-step-header">
+                        <div class="install-step-icon">📁</div>
+                        <div class="install-step-title">1. Preparar Ambiente</div>
+                    </div>
+                    <div class="install-step-content">
+                        <p>Navegue para o diretório do projeto e verifique os arquivos necessários.</p>
+                        <div class="install-code-block">
+                            <code>
+<span class="comment"># Navegar para o diretório do projeto</span>
+<span class="keyword">cd</span> /data/govbr
+
+<span class="comment"># Verificar arquivos necessários</span>
+<span class="keyword">ls</span> -la web-ui/
+<span class="keyword">ls</span> -la delta_scripts/
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="install-step-card">
+                    <div class="install-step-header">
+                        <div class="install-step-icon">🚀</div>
+                        <div class="install-step-title">2. Iniciar Serviços</div>
+                    </div>
+                    <div class="install-step-content">
+                        <p>Inicie os serviços Docker usando Docker Compose. Você pode iniciar apenas o dashboard ou incluir o Jupyter Lab.</p>
+                        <div class="install-code-block">
+                            <code>
+<span class="comment"># Iniciar apenas Dashboard Web (Porta 8080)</span>
+docker compose -f docker-compose-spark.yml up -d web-ui
+
+<span class="comment"># Ou iniciar Dashboard + Jupyter Lab</span>
+docker compose -f docker-compose-spark.yml up -d
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="install-step-card">
+                    <div class="install-step-header">
+                        <div class="install-step-icon">✅</div>
+                        <div class="install-step-title">3. Verificar Status</div>
+                    </div>
+                    <div class="install-step-content">
+                        <p>Verifique se os containers estão rodando corretamente e monitore os logs se necessário.</p>
+                        <div class="install-code-block">
+                            <code>
+<span class="comment"># Verificar containers rodando</span>
+docker ps --filter <span class="string">"name=govbr"</span>
+
+<span class="comment"># Ver logs do web-ui</span>
+docker logs govbr-web-ui -f
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="install-step-card">
+                    <div class="install-step-header">
+                        <div class="install-step-icon">🌐</div>
+                        <div class="install-step-title">4. Acessar Dashboard</div>
+                    </div>
+                    <div class="install-step-content">
+                        <p>O dashboard está disponível e mostra toda a documentação integrada da plataforma.</p>
+                        <div class="success-box" style="margin-top: 1rem;">
+                            <p><strong>URL:</strong> <a href="http://49.13.203.251:8080" target="_blank" style="color: var(--accent-success); font-size: 1.2rem;">http://49.13.203.251:8080</a></p>
+                            <p style="margin-top: 0.5rem; color: var(--text-secondary);">Acesse o dashboard para visualizar toda a documentação e estrutura do projeto.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 3rem;">🚀 Execução do Pipeline</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                Execute o pipeline de ingestão e transformação de dados usando diferentes métodos. 
+                Escolha a opção mais adequada ao seu ambiente de trabalho.
+            </p>
+
+            <style>
+                .execution-methods {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                    gap: 2rem;
+                    margin: 2rem 0;
+                }
+
+                .execution-card {
+                    background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(30, 41, 59, 0.8) 100%);
+                    border: 1px solid var(--border-color);
+                    border-radius: 16px;
+                    padding: 2rem;
+                    position: relative;
+                    overflow: hidden;
+                    transition: all 0.3s ease;
+                }
+
+                .execution-card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 4px;
+                    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+                }
+
+                .execution-card:hover {
+                    transform: translateY(-4px);
+                    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+                    border-color: var(--accent-primary);
+                }
+
+                .execution-card-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    margin-bottom: 1.5rem;
+                }
+
+                .execution-card-icon {
+                    font-size: 2.5rem;
+                    line-height: 1;
+                }
+
+                .execution-card-title {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    color: var(--text-primary);
+                    margin: 0;
+                }
+
+                .execution-card-description {
+                    color: var(--text-secondary);
+                    font-size: 0.95rem;
+                    margin-bottom: 1.5rem;
+                    line-height: 1.6;
+                }
+
+                .execution-code-block {
+                    background: #1e1e2e;
+                    border: 1px solid var(--border-color);
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    margin-top: 1rem;
+                    position: relative;
+                    overflow-x: auto;
+                }
+
+                .execution-code-block::before {
+                    content: 'TERMINAL';
+                    position: absolute;
+                    top: 0.75rem;
+                    right: 1rem;
+                    font-size: 0.7rem;
+                    color: var(--text-muted);
+                    font-weight: 600;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                }
+
+                .execution-code-block pre {
+                    margin: 0;
+                    padding: 0;
+                    background: transparent;
+                    border: none;
+                    overflow-x: auto;
+                }
+
+                .execution-code-block code {
+                    font-family: 'Fira Code', 'Courier New', monospace;
+                    font-size: 0.9rem;
+                    line-height: 1.8;
+                    color: #e2e8f0;
+                    display: block;
+                    white-space: pre;
+                }
+
+                .execution-code-block .keyword { color: #c678dd; font-weight: 600; }
+                .execution-code-block .string { color: #98c379; }
+                .execution-code-block .comment { color: #5c6370; font-style: italic; }
+                .execution-code-block .function { color: #61afef; }
+                .execution-code-block .number { color: #d19a66; }
+
+                .query-example-card {
+                    background: linear-gradient(135deg, var(--bg-tertiary) 0%, rgba(30, 41, 59, 0.8) 100%);
+                    border: 1px solid var(--border-color);
+                    border-radius: 16px;
+                    padding: 2rem;
+                    margin-top: 2rem;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .query-example-card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 4px;
+                    background: linear-gradient(90deg, var(--accent-success), var(--accent-primary));
+                }
+
+                .query-example-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    margin-bottom: 1.5rem;
+                }
+
+                .query-example-title {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    color: var(--text-primary);
+                    margin: 0;
+                }
+
+                .query-example-description {
+                    color: var(--text-secondary);
+                    font-size: 0.95rem;
+                    margin-bottom: 1.5rem;
+                    line-height: 1.6;
+                }
+
+                .query-code-block {
+                    background: #1e1e2e;
+                    border: 1px solid var(--border-color);
+                    border-radius: 12px;
+                    padding: 1.5rem;
+                    position: relative;
+                    overflow-x: auto;
+                }
+
+                .query-code-block::before {
+                    content: 'PYTHON';
+                    position: absolute;
+                    top: 0.75rem;
+                    right: 1rem;
+                    font-size: 0.7rem;
+                    color: var(--text-muted);
+                    font-weight: 600;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                }
+
+                .query-code-block pre {
+                    margin: 0;
+                    padding: 0;
+                    background: transparent;
+                    border: none;
+                    overflow-x: auto;
+                }
+
+                .query-code-block code {
+                    font-family: 'Fira Code', 'Courier New', monospace;
+                    font-size: 0.9rem;
+                    line-height: 1.8;
+                    color: #e2e8f0;
+                    display: block;
+                    white-space: pre;
+                }
+
+                .query-code-block .keyword { color: #c678dd; font-weight: 600; }
+                .query-code-block .string { color: #98c379; }
+                .query-code-block .comment { color: #5c6370; font-style: italic; }
+                .query-code-block .function { color: #61afef; }
+                .query-code-block .number { color: #d19a66; }
+
+                .step-badge {
+                    display: inline-block;
+                    background: rgba(99, 102, 241, 0.2);
+                    color: var(--accent-primary);
+                    padding: 0.25rem 0.75rem;
+                    border-radius: 6px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    margin-right: 0.5rem;
+                }
+            </style>
+
+            <div class="execution-methods">
+                <!-- Método 1: Jupyter Lab -->
+                <div class="execution-card">
+                    <div class="execution-card-header">
+                        <div class="execution-card-icon">📓</div>
+                        <h4 class="execution-card-title">Jupyter Lab</h4>
+                    </div>
+                    <p class="execution-card-description">
+                        Execute comandos diretamente nas células do notebook usando o prefixo <code>!</code> 
+                        para executar comandos do sistema.
+                    </p>
+                    <div class="execution-code-block">
+                        <pre><code><span class="comment"># Executar pipeline completo em modo incremental</span>
+<span class="keyword">!</span>python /home/jovyan/work/pipeline_ingestao.py <span class="keyword">--mode</span> <span class="string">incremental</span>
+
+<span class="comment"># Executar transformação Prata</span>
+<span class="keyword">!</span>python /home/jovyan/work/02_prata_transformacao.py
+
+<span class="comment"># Executar enriquecimento Ouro</span>
+<span class="keyword">!</span>python /home/jovyan/work/03_ouro_enriquecimento.py</code></pre>
+                    </div>
+                </div>
+
+                <!-- Método 2: Terminal do Container -->
+                <div class="execution-card">
+                    <div class="execution-card-header">
+                        <div class="execution-card-icon">💻</div>
+                        <h4 class="execution-card-title">Terminal do Container</h4>
+                    </div>
+                    <p class="execution-card-description">
+                        Acesse o container Docker via terminal e execute os scripts Python diretamente 
+                        no ambiente de execução.
+                    </p>
+                    <div class="execution-code-block">
+                        <pre><code><span class="comment"># Passo 1: Acessar container</span>
+docker exec <span class="keyword">-it</span> govbr-jupyter-delta bash
+
+<span class="comment"># Passo 2: Navegar para diretório de trabalho</span>
+cd /home/jovyan/work
+
+<span class="comment"># Passo 3: Executar pipeline completo</span>
+python pipeline_ingestao.py <span class="keyword">--mode</span> <span class="string">incremental</span>
+python 02_prata_transformacao.py
+python 03_ouro_enriquecimento.py</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exemplo de Consulta -->
+            <div class="query-example-card">
+                <div class="query-example-header">
+                    <div style="font-size: 2rem;">🔍</div>
+                    <h4 class="query-example-title">Exemplo de Consulta aos Dados</h4>
+                </div>
+                <p class="query-example-description">
+                    Use a biblioteca <code>minio</code> para conectar ao MinIO e ler arquivos Parquet 
+                    diretamente do bucket. Este exemplo mostra como acessar dados da camada Bronze.
+                </p>
+                <div class="query-code-block">
+                    <pre><code><span class="comment"># Importar bibliotecas necessárias</span>
+<span class="keyword">from</span> minio <span class="keyword">import</span> Minio
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> io
+
+<span class="comment"># Conectar ao MinIO</span>
+minio_client = Minio(
+    <span class="string">"ch8ai-minio.l6zv5a.easypanel.host"</span>,
+    access_key=<span class="string">"admin"</span>,
+    secret_key=<span class="string">"1q2w3e4r"</span>,
+    secure=<span class="keyword">True</span>
+)
+
+<span class="comment"># Ler arquivo Parquet da camada Bronze</span>
+response = minio_client.get_object(
+    <span class="string">"govbr"</span>, 
+    <span class="string">"bronze/ibge/municipios/dt=20241201/data.parquet"</span>
+)
+
+<span class="comment"># Converter para DataFrame Pandas</span>
+df = pd.read_parquet(io.BytesIO(response.read()))
+response.close()
+response.release_conn()
+
+<span class="comment"># Visualizar dados</span>
+<span class="keyword">print</span>(df.head())
+<span class="keyword">print</span>(df.info())</code></pre>
+                </div>
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--accent-success); border-radius: 8px;">
+                    <p style="margin: 0; color: var(--accent-success); font-size: 0.9rem;">
+                        <strong>💡 Dica:</strong> Substitua <code>dt=20241201</code> pela data de ingestão desejada. 
+                        Use <code>minio_client.list_objects()</code> para listar todas as partições disponíveis.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <section class="section" style="background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary)); text-align: center;">
+            <h2 style="border: none; margin-bottom: 1rem;">🎯 Resumo da Arquitetura</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>Componentes</h4>
+                    <ul style="text-align: left;">
+                        <li>Dashboard Web (8080)</li>
+                        <li>Jupyter Lab (8889)</li>
+                        <li>MinIO (Storage)</li>
+                        <li>Apache Spark</li>
+                        <li>Delta Lake</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Fluxo de Dados</h4>
+                    <p><strong>APIs → Bronze → Prata → Ouro → Análise</strong></p>
+                    <p style="margin-top: 1rem; color: var(--text-secondary);">Medallion Architecture</p>
+                </div>
+                <div class="card">
+                    <h4>Tecnologias</h4>
+                    <ul style="text-align: left;">
+                        <li>Storage: MinIO (S3)</li>
+                        <li>Format: Parquet</li>
+                        <li>Processing: Spark</li>
+                        <li>Transactions: Delta</li>
+                        <li>Interface: Jupyter</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="quick-links" style="justify-content: center; margin-top: 2rem;">
+                <a href="http://49.13.203.251:8889" target="_blank" class="btn btn-primary">📊 Abrir Jupyter Lab</a>
+                <a href="https://ch8ai-minio.l6zv5a.easypanel.host" target="_blank" class="btn btn-secondary">🗄️ Acessar MinIO</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Configuração do IP do servidor
+        const SERVER_IP = '49.13.203.251';
+        const SERVER_HOST = SERVER_IP;
+        
+        // URLs dos serviços (usando o IP do servidor)
+        const JUPYTER_URL = `http://${SERVER_IP}:8889`;
+        const DASHBOARD_URL = `http://${SERVER_IP}:8080`;
+        
+        // Atualizar todos os links e textos dinamicamente quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualizar todos os links do Jupyter Lab
+            document.querySelectorAll('a[href*="localhost:8889"], a[href*="http://localhost:8889"]').forEach(link => {
+                link.href = JUPYTER_URL;
+                if (link.textContent && link.textContent.includes('localhost:8889')) {
+                    link.textContent = link.textContent.replace(/localhost:8889/g, `${SERVER_IP}:8889`);
+                }
+            });
+            
+            // Atualizar todos os links do Dashboard
+            document.querySelectorAll('a[href*="localhost:8080"], a[href*="http://localhost:8080"]').forEach(link => {
+                link.href = DASHBOARD_URL;
+                if (link.textContent && link.textContent.includes('localhost:8080')) {
+                    link.textContent = link.textContent.replace(/localhost:8080/g, `${SERVER_IP}:8080`);
+                }
+            });
+            
+            // Atualizar textos que contêm URLs localhost
+            const walker = document.createTreeWalker(
+                document.body,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+            
+            let node;
+            while (node = walker.nextNode()) {
+                if (node.textContent.includes('localhost:8889')) {
+                    node.textContent = node.textContent.replace(/localhost:8889/g, `${SERVER_IP}:8889`);
+                }
+                if (node.textContent.includes('localhost:8080')) {
+                    node.textContent = node.textContent.replace(/localhost:8080/g, `${SERVER_IP}:8080`);
+                }
+            }
+        });
+        
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#6366f1',
+                primaryTextColor: '#e2e8f0',
+                primaryBorderColor: '#4f46e5',
+                lineColor: '#8b5cf6',
+                secondaryColor: '#1a2332',
+                tertiaryColor: '#141b2d',
+                background: '#0a0e27',
+                mainBkg: '#141b2d',
+                secondBkg: '#1a2332',
+                textColor: '#e2e8f0'
+            }
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Update active nav link
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Highlight active section on scroll
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

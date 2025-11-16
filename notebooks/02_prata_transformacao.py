@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+"""
+CAMADA PRATA - Transformação e Relacionamento de Dados
+Trata dados brutos da camada Bronze, relaciona tabelas e cria estruturas prontas para análise
+"""
+
+import pandas as pd
+from minio import Minio
+from minio.error import S3Error
+import io
+from datetime import datetime
+import pyarrow.parquet as pq
+
+# Configurações
+MINIO_SERVER_URL = "ch8ai-minio.l6zv5a.easypanel.host"
+MINIO_ROOT_USER = "admin"
+MINIO_ROOT_PASSWORD = "1q2w3e4r"
+BUCKET_NAME = "govbr"
+
+# Cliente MinIO
+minio_client = Minio(
+    MINIO_SERVER_URL,
+    access_key=MINIO_ROOT_USER,
+    secret_key=MINIO_ROOT_PASSWORD,
+    secure=True
+)
+
+def read_from_bronze(source, dataset_name, partition_date=None):
+    """Lê DataFrame da camada Bronze"""
+    if partition_date is None:
+        # Buscar a partição mais recente
+        prefix = f"bronze/{source}/{dataset_name}/"
+        objects = list(minio_client.list_objects(BUCKET_NAME, prefix=prefix, recursive=True))
+        if not objects:
+            return None
+        
+        # Pegar o mais recente
+        latest = max(objects, key=lambda x: x.last_modified)
+        object_name = latest.object_name
+    else:
+        object_name = f"bronze/{source}/{dataset_name}/dt={partition_date}/data.parquet"
+    
+    try:
+        response = minio_client.get_object(BUCKET_NAME, object_name)
+        df = pd.read_parquet(io.BytesIO(response.read()))
+        response.close()
+        response.release_conn()
+        print(f"✅ Lido Bronze: {object_name} ({len(df)} registros)")
+        return df
+    except Exception as e:
+        print(f"❌ Erro ao ler {object_name}: {e}")
+        return None
+
+def save_to_prata(df, dataset_name, partition_date=None):
+    """Salva DataFrame na camada Prata em formato Parquet"""
+    if partition_date is None:
+        partition_date = datetime.now().strftime('%Y%m%d')
+    
+    object_name = f"prata/{dataset_name}/dt={partition_date}/data.parquet"
+    
+    try:
+        buffer = io.BytesIO()
+        df.to_parquet(buffer, index=False, engine='pyarrow', compression='snappy')
+        buffer.seek(0)
+        
+        minio_client.put_object(
+            BUCKET_NAME,
+            object_name,
+            buffer,
+            length=buffer.getbuffer().nbytes,
+            content_type='application/octet-stream'
+        )
+        
+        print(f"✅ Prata: {object_name} ({len(df)} registros, {buffer.getbuffer().nbytes/1024:.2f} KB)")
+        return True
+    except Exception as e:
+        print(f"❌ Erro ao salvar {object_name}: {e}")
+        return False
+
+print("=" * 80)
+print("CAMADA PRATA - TRANSFORMAÇÃO E RELACIONAMENTO")
+print("=" * 80)
+
+# 1. Ler dados da Bronze
+print("\n[1/4] Carregando dados da camada Bronze...")
+
+df_municipios = read_from_bronze('ibge', 'municipios')
+df_estados = read_from_bronze('ibge', 'estados')
+df_orgaos = read_from_bronze('portal_transparencia', 'orgaos_siafi')
+df_bpc = read_from_bronze('portal_transparencia', 'bpc_municipios')
+df_populacao = read_from_bronze('ibge', 'populacao_estados')
+
+if df_municipios is None or df_estados is None:
+    print("❌ Erro: Dados essenciais não encontrados na Bronze")
+    exit(1)
+
+# 2. Tratamento e Limpeza de Dados
+print("\n[2/4] Tratando e limpando dados...")
+
+# Normalizar nomes de colunas
+df_municipios.columns = df_municipios.columns.str.lower().str.strip()
+df_estados.columns = df_estados.columns.str.lower().str.strip()
+
+# Remover duplicatas
+df_municipios = df_municipios.drop_duplicates(subset=['codigo_ibge'])
+df_estados = df_estados.drop_duplicates(subset=['uf_id'])
+
+# Padronizar tipos de dados
+df_municipios['codigo_ibge'] = df_municipios['codigo_ibge'].astype(str)
+if 'codigo_ibge' in df_bpc.columns:
+    df_bpc['codigo_ibge'] = df_bpc['codigo_ibge'].astype(str)
+
+# Criar dimensão de municípios enriquecida
+print("\n[3/4] Criando dimensões e relacionamentos...")
+
+# Selecionar apenas colunas que existem em df_estados
+cols_estados = ['uf_id', 'uf_sigla']
+if 'uf_nome' in df_estados.columns:
+    cols_estados.append('uf_nome')
+if 'regiao_id' in df_estados.columns:
+    cols_estados.append('regiao_id')
+if 'regiao_nome' in df_estados.columns:
+    cols_estados.append('regiao_nome')
+
+dim_municipios = df_municipios.merge(
+    df_estados[cols_estados],
+    on='uf_sigla',
+    how='left'
+).copy()
+
+# Adicionar população por estado aos municípios
+if df_populacao is not None:
+    dim_municipios = dim_municipios.merge(
+        df_populacao[['uf_sigla', 'populacao']],
+        on='uf_sigla',
+        how='left'
+    )
+
+# Criar fato de BPC enriquecido
+if df_bpc is not None and len(df_bpc) > 0:
+    # Selecionar apenas colunas que existem
+    cols_municipios = ['codigo_ibge', 'municipio', 'uf_sigla']
+    if 'uf_nome' in dim_municipios.columns:
+        cols_municipios.append('uf_nome')
+    if 'regiao_nome' in dim_municipios.columns:
+        cols_municipios.append('regiao_nome')
+    
+    fato_bpc = df_bpc.merge(
+        dim_municipios[cols_municipios],
+        on='codigo_ibge',
+        how='left',
+        suffixes=('', '_dim')
+    ).copy()
+    
+    # Adicionar métricas calculadas
+    fato_bpc['valor_per_capita'] = fato_bpc['valor'] / fato_bpc['quantidade_beneficiados'].replace(0, 1)
+    fato_bpc['data_referencia'] = pd.to_datetime(fato_bpc['data_referencia'], errors='coerce')
+    fato_bpc['ano'] = fato_bpc['data_referencia'].dt.year
+    fato_bpc['mes'] = fato_bpc['data_referencia'].dt.month
+    
+    # Salvar fato de BPC
+    save_to_prata(fato_bpc, 'fato_bpc')
+else:
+    print("⚠️  Dados de BPC não disponíveis")
+
+# Criar dimensão de estados agregada
+dim_estados = df_estados.copy()
+if df_populacao is not None:
+    dim_estados = dim_estados.merge(
+        df_populacao,
+        on=['uf_id', 'uf_sigla'],
+        how='left'
+    )
+
+# Agregar dados de BPC por estado (se disponível)
+if df_bpc is not None and len(df_bpc) > 0:
+    if 'valor' in df_bpc.columns and 'quantidade_beneficiados' in df_bpc.columns:
+        bpc_por_estado = df_bpc.groupby('uf_sigla').agg({
+            'valor': 'sum',
+            'quantidade_beneficiados': 'sum'
+        }).reset_index()
+        
+        bpc_por_estado.columns = ['uf_sigla', 'total_valor_bpc', 'total_beneficiados_bpc']
+        
+        dim_estados = dim_estados.merge(
+            bpc_por_estado,
+            on='uf_sigla',
+            how='left'
+        )
+        
+        # Calcular métricas apenas se populacao existe
+        if 'populacao' in dim_estados.columns:
+            dim_estados['valor_bpc_per_capita'] = (
+                dim_estados['total_valor_bpc'] / dim_estados['populacao'].replace(0, 1)
+            )
+            dim_estados['percentual_beneficiados'] = (
+                dim_estados['total_beneficiados_bpc'] / dim_estados['populacao'].replace(0, 1) * 100
+            )
+
+# Salvar dimensões
+save_to_prata(dim_municipios, 'dim_municipios')
+save_to_prata(dim_estados, 'dim_estados')
+
+# Criar tabela de órgãos tratada
+if df_orgaos is not None:
+    dim_orgaos = df_orgaos.copy()
+    dim_orgaos.columns = dim_orgaos.columns.str.lower().str.strip()
+    dim_orgaos = dim_orgaos.drop_duplicates(subset=['codigo'])
+    save_to_prata(dim_orgaos, 'dim_orgaos')
+
+# 4. Criar resumo de transformações
+print("\n[4/4] Criando resumo de transformações...")
+
+resumo_transformacoes = pd.DataFrame({
+    'camada': ['Bronze', 'Prata'],
+    'tabela': ['Dados Brutos', 'Dados Tratados'],
+    'registros_municipios': [len(df_municipios), len(dim_municipios)],
+    'registros_estados': [len(df_estados), len(dim_estados)],
+    'registros_bpc': [len(df_bpc) if df_bpc is not None else 0, len(fato_bpc) if df_bpc is not None else 0],
+    'data_processamento': [datetime.now().strftime('%Y-%m-%d %H:%M:%S')] * 2
+})
+
+print("\n" + "=" * 80)
+print("RESUMO DA TRANSFORMAÇÃO PRATA")
+print("=" * 80)
+print(f"\n✅ Municípios tratados: {len(dim_municipios)}")
+print(f"✅ Estados tratados: {len(dim_estados)}")
+if df_bpc is not None:
+    print(f"✅ Registros BPC tratados: {len(fato_bpc)}")
+
+# Listar arquivos Prata
+objects = minio_client.list_objects(BUCKET_NAME, prefix="prata/", recursive=True)
+prata_files = list(objects)
+
+print(f"\nTotal de arquivos na camada Prata: {len(prata_files)}")
+total_size = 0
+for obj in prata_files:
+    size_kb = obj.size / 1024
+    total_size += obj.size
+    print(f"  📁 {obj.object_name} ({size_kb:.2f} KB)")
+
+print(f"\nTamanho total: {total_size/1024:.2f} KB")
+print("\n✅ Transformação Prata concluída!")

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Jupyter com Delta Standalone (mais leve que Spark)
+  jupyter-delta:
+    image: jupyter/scipy-notebook:latest
+    container_name: govbr-jupyter-delta
+    ports:
+      - "8889:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=1q2w3e4r
+      - AWS_ENDPOINT_URL=https://ch8ai-minio.l6zv5a.easypanel.host
+    volumes:
+      - ./delta_scripts:/home/jovyan/work
+      - ./notebooks:/home/jovyan/notebooks
+      - ./:/home/jovyan/govbr
+    command: >
+      /bin/bash -c "
+      pip install duckdb pandas minio pyarrow s3fs boto3 -q &&
+      start-notebook.sh --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.notebook_dir=/home/jovyan/notebooks
+      "
+    networks:
+      - govbr-network
+
+networks:
+  govbr-network:
+    driver: bridge

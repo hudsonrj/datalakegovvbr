@@ -51,8 +51,12 @@ datalakegovvbr/
 │   └── 03_ouro_enriquecimento.py
 ├── notebooks/               # Notebooks Jupyter
 │   └── notebook_analises.ipynb
-├── docker-compose.yml      # Configuração Docker
-├── Dockerfile.jupyter-delta
+├── docker-compose.yml           # Configuração Docker (Spark completo)
+├── docker-compose-delta.yml     # Jupyter com Delta Lake
+├── docker-compose-simple.yml    # Jupyter simples (DuckDB)
+├── docker-compose-spark.yml     # Spark com Dashboard Web
+├── Dockerfile.jupyter-delta     # Dockerfile customizado
+├── iniciar_delta_lake.sh        # Script de inicialização
 └── README.md
 ```
 
@@ -83,18 +87,66 @@ PORTAL_TRANSPARENCIA_API_KEY=sua-chave-api
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/hudsonrj28/datalakegovvbr.git
+git clone https://github.com/hudsonrj/datalakegovvbr.git
 cd datalakegovvbr
 ```
 
-2. Inicie os containers:
+2. Escolha uma das opções para iniciar os containers:
+
+#### Opção 1: Script Automatizado (Recomendado) ⭐
+```bash
+chmod +x iniciar_delta_lake.sh
+./iniciar_delta_lake.sh
+```
+O script oferece duas opções:
+- **Opção 1**: Jupyter simples com DuckDB (mais leve)
+- **Opção 2**: Spark completo com Delta Lake (mais recursos)
+
+#### Opção 2: Docker Compose Manual
+
+**Jupyter Simples (DuckDB):**
+```bash
+docker-compose -f docker-compose-simple.yml up -d
+```
+
+**Jupyter com Delta Lake e Spark:**
 ```bash
 docker-compose -f docker-compose-delta.yml up -d
 ```
 
-3. Acesse o Jupyter Lab:
+**Spark Completo com Delta Lake:**
+```bash
+docker-compose -f docker-compose.yml up -d
 ```
-http://localhost:8888
+
+**Spark com Dashboard Web (Porta 8080):**
+```bash
+docker-compose -f docker-compose-spark.yml up -d
+```
+
+3. Acesse os serviços:
+
+- **Jupyter Lab**: http://localhost:8889 (sem senha)
+- **Spark UI** (se usar opção completa): http://localhost:8080
+- **Dashboard Web** (se usar docker-compose-spark.yml): http://localhost:8080
+
+### Comandos Úteis
+
+```bash
+# Ver status dos containers
+docker ps --filter "name=govbr"
+
+# Ver logs
+docker logs govbr-jupyter-delta -f
+
+# Parar containers
+docker-compose -f docker-compose-simple.yml down
+
+# Reiniciar containers
+docker-compose -f docker-compose-simple.yml restart
+
+# Entrar no container
+docker exec -it govbr-jupyter-delta bash
 ```
 
 ## 📊 Uso
@@ -164,8 +216,8 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 
 ## 👤 Autor
 
-**Hudson RJ28**
-- GitHub: [@hudsonrj28](https://github.com/hudsonrj28)
+**Hudson RJ**
+- GitHub: [@hudsonrj](https://github.com/hudsonrj)
 
 ## 🙏 Agradecimentos
 

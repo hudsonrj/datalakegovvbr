@@ -149,6 +149,32 @@ docker-compose -f docker-compose-simple.yml restart
 docker exec -it govbr-jupyter-delta bash
 ```
 
+## 📊 Exemplos de Análises
+
+O pipeline gera análises visuais dos dados coletados. Abaixo estão alguns exemplos com dados reais:
+
+### Top 10 Municípios - Valor Total Bolsa Família
+
+![Top 10 Municípios - Valor Total](docs/images/grafico_top10_valor.png)
+
+### Top 10 Municípios - Número de Beneficiários
+
+![Top 10 Municípios - Beneficiários](docs/images/grafico_top10_beneficiarios.png)
+
+### Distribuição de Valores Totais
+
+![Distribuição de Valores](docs/images/grafico_distribuicao_valores.png)
+
+### Comparação: Bolsa Família vs BPC
+
+![Comparação de Programas](docs/images/grafico_comparacao_programas.png)
+
+### Beneficiários por Estado
+
+![Beneficiários por Estado](docs/images/grafico_beneficiarios_por_estado.png)
+
+> 💡 **Nota**: Para gerar novos gráficos, execute o script `gerar_graficos_readme.py` dentro do container Jupyter.
+
 ## 📊 Uso
 
 ### Executar Pipeline Completo

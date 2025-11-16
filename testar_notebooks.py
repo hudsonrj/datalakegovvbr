@@ -63,8 +63,8 @@ def testar_notebook(notebook_path):
 
 if __name__ == "__main__":
     notebooks = [
-        'notebook_normalizacao_enderecos_prata.ipynb',
-        'notebook_ranking_enderecos_ouro.ipynb'
+        'notebooks/notebook_normalizacao_enderecos_prata.ipynb',
+        'notebooks/notebook_ranking_enderecos_ouro.ipynb'
     ]
     
     print("="*80)

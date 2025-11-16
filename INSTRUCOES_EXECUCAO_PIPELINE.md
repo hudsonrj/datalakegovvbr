@@ -17,7 +17,7 @@
    jupyter lab
    ```
 
-2. Abra o notebook: `notebook_normalizacao_enderecos_prata.ipynb`
+2. Abra o notebook: `notebooks/notebook_normalizacao_enderecos_prata.ipynb`
 
 3. Execute todas as células sequencialmente (Shift+Enter)
 
@@ -28,7 +28,7 @@
 
 #### 2. Ranking - Prata → Ouro
 
-1. Abra o notebook: `notebook_ranking_enderecos_ouro.ipynb`
+1. Abra o notebook: `notebooks/notebook_ranking_enderecos_ouro.ipynb`
 
 2. Execute todas as células sequencialmente
 

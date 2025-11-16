@@ -4,13 +4,13 @@
 
 ### 1. ✅ Notebooks Criados e Validados
 
-- ✅ **`notebook_normalizacao_enderecos_prata.ipynb`**
+- ✅ **`notebooks/notebook_normalizacao_enderecos_prata.ipynb`**
   - 22 células (10 markdown, 12 código)
   - Carrega dados da Bronze
   - Normaliza endereços para padrão brasileiro
   - Salva na Prata
 
-- ✅ **`notebook_ranking_enderecos_ouro.ipynb`**
+- ✅ **`notebooks/notebook_ranking_enderecos_ouro.ipynb`**
   - 26 células (13 markdown, 13 código)
   - Carrega dados da Prata
   - Calcula scores e rankings por CPF
@@ -54,7 +54,7 @@
    ```
 
 2. **Execute o notebook de normalização**:
-   - Abra: `notebook_normalizacao_enderecos_prata.ipynb`
+   - Abra: `notebooks/notebook_normalizacao_enderecos_prata.ipynb`
    - Execute todas as células (Shift+Enter)
    - Aguarde a normalização (~560k registros)
 
